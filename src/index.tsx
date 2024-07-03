@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { Setting } from './const';
-
 import App from './components/app/app';
+import { getRandomCard } from './mocks/generateMock';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,6 +10,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App cardCount={Setting.CardCount} />
+    <App 
+      cards={getRandomCard()}
+    />
   </React.StrictMode>
 );
