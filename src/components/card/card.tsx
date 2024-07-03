@@ -1,11 +1,11 @@
 
 import { useState } from 'react';
-import { Offer } from '../../types/offer';
+import { TOffer } from '../../types/offer';
 
 import { Link } from 'react-router-dom';
 
 type TCard = {
-  info: Offer;
+  info: TOffer;
 }
 
 function Card ({ info }: TCard): JSX.Element {

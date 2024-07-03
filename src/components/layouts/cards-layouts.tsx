@@ -1,10 +1,10 @@
-import { Offer } from '../../types/offer';
+import { TOffer } from '../../types/offer';
 
 import Card from '../card/card';
 
 
 type TCardsLayout = {
-  cards: Offer[];
+  cards: TOffer[];
 }
 
 function CardsLayout ({ cards }: TCardsLayout): JSX.Element {
