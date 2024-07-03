@@ -1,10 +1,10 @@
-import ReviewForm from "../components/forms/review-form";
-import Logo from "../components/logo/logo";
-import { AuthorizationStatus } from "../const";
+import ReviewForm from '../components/forms/review-form';
+import Logo from '../components/logo/logo';
+import { AuthorizationStatus } from '../const';
 
 
 type TOfferScreen = {
-  authorization: AuthorizationStatus
+  authorization: AuthorizationStatus;
 }
 
 function OfferScreen ({ authorization }: TOfferScreen): JSX.Element {

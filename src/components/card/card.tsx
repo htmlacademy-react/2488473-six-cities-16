@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import { Offer } from '../../types/offer';
 
 import { Link } from 'react-router-dom';
@@ -8,8 +9,14 @@ type TCard = {
 }
 
 function Card ({ info }: TCard): JSX.Element {
+  const [isHover, setHover] = useState<boolean>(false);
+
   return (
-    <div className="cities__card place-card">
+    <div
+      className="cities__card place-card"
+      onMouseLeave={() => setHover((prevState) => !prevState)}
+      onMouseEnter={() => setHover((prevState) => !prevState)}
+    >
       {info.isPremium ? <div className="place-card__mark"><span>Premium</span></div> : null}
       <div className="cities__image-wrapper place-card__image-wrapper">
         <a href="#">

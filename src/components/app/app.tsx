@@ -25,14 +25,16 @@ function App ({ cards }: TApp): JSX.Element {
           <PrivateRoute authorization={AuthorizationStatus.Auth}>
             <FavoriteScreen />
           </PrivateRoute>
-        }/>
+        }
+        />
         <Route path='/offer/:id' element={<OfferScreen authorization={AuthorizationStatus.Auth} />}/>
         <Route path='*' element={
           <>
             <h1>404</h1>
             <Logo />
           </>
-        }/>
+        }
+        />
       </Routes>
     </BrowserRouter>
   );
