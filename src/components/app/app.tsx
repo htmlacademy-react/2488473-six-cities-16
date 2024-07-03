@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { Offer } from '../../types/offer';
+import { TOffer, TReview } from '../../types/global';
 
 import { AuthorizationStatus } from '../../const';
 
@@ -12,10 +12,11 @@ import PrivateRoute from '../private-route/private-route';
 import Logo from '../logo/logo';
 
 type TApp = {
-  cards: Offer[];
+  cards: TOffer[];
+  reviews: TReview[];
 };
 
-function App ({ cards }: TApp): JSX.Element {
+function App ({ cards, reviews }: TApp): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
@@ -27,7 +28,7 @@ function App ({ cards }: TApp): JSX.Element {
           </PrivateRoute>
         }
         />
-        <Route path='/offer/:id' element={<OfferScreen authorization={AuthorizationStatus.Auth} />}/>
+        <Route path='/offer/:id' element={<OfferScreen reviews={reviews} authorization={AuthorizationStatus.NoAuth} />}/>
         <Route path='*' element={
           <>
             <h1>404</h1>

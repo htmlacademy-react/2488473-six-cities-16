@@ -1,9 +1,7 @@
-import { TOffer } from '../types/offer';
+import { TOffer } from '../types/global';
 
 import CardsLayout from '../components/layouts/cards-layouts';
 import Logo from '../components/logo/logo';
-import Map from '../components/map/map';
-import { getAmsterdam } from '../mocks/generateMock';
 
 type TMainScreen = {
   cards: TOffer[];
@@ -101,7 +99,7 @@ function MainScreen ({ cards }: TMainScreen): JSX.Element {
             </section>
             <div className="cities__right-section">
               <section className="cities__map map" >
-                <Map city={getAmsterdam()} points={ cards } />
+                {/* <Map city={getAmsterdam()} points={ cards } /> */}
               </section>
             </div>
           </div>

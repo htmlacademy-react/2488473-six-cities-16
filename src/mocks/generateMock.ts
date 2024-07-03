@@ -1,4 +1,4 @@
-import { TOffer, TCity } from '../types/offer';
+import { TOffer, TCity, TReview } from '../types/global';
 
 export function getRandomCard (): TOffer[] {
   return [
@@ -118,4 +118,18 @@ export function getAmsterdam (): TCity {
       zoom: 8
     }
   });
+}
+
+export function getRandomReviews (): TReview[] {
+  return [{
+    comment: 'good place, good emotion, good self',
+    date: '2019-05-08T14:13:56.569Z',
+    id: '1234',
+    user: {
+      avatarUrl: 'https://static2.tgstat.ru/channels/_0/c8/c8fcdb7e4656ff95aa29067c6ce4dc85.jpg',
+      isPro: true,
+      name: 'Max'
+    },
+    rating: 4
+  }];
 }

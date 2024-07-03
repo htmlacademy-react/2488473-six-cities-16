@@ -1,4 +1,4 @@
-type THost = {
+type TUser = {
   name: string;
   avatarUrl: string;
   isPro: boolean;
@@ -15,6 +15,14 @@ export type TCity = {
   location: TLocation;
 }
 
+export type TReview = {
+  id: string;
+  date: string;
+  user: TUser;
+  comment: string;
+  rating: number;
+}
+
 export type TOffer = {
   id: string;
   price: number;
@@ -26,7 +34,7 @@ export type TOffer = {
   isFavorite: boolean;
   isPremium: boolean;
   maxAdults: number;
-  host: THost;
+  host: TUser;
   photo: string;
   city: TCity;
 };

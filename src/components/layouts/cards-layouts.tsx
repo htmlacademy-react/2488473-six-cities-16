@@ -1,4 +1,4 @@
-import { TOffer } from '../../types/offer';
+import { TOffer } from '../../types/global';
 
 import Card from '../card/card';
 

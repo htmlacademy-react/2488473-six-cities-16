@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import leaflet from 'leaflet';
 import useMap from '../../hooks/useMap';
-import { TCity, TOffer } from '../../types/offer';
+import { TCity, TOffer } from '../../types/global';
 import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../../const';
 
 type TMap = {

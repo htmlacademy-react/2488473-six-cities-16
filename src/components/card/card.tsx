@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { TOffer } from '../../types/offer';
+import { TOffer } from '../../types/global';
 
 import { Link } from 'react-router-dom';
 
