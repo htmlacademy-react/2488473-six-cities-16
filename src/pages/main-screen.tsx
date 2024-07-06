@@ -2,12 +2,17 @@ import { TOffer } from '../types/global';
 
 import CardsLayout from '../components/layouts/cards-layouts';
 import Logo from '../components/logo/logo';
+import Map from '../components/map/map';
+import { getAmsterdam } from '../mocks/generateMock';
+import { useState } from 'react';
 
 type TMainScreen = {
   cards: TOffer[];
 };
 
 function MainScreen ({ cards }: TMainScreen): JSX.Element {
+  const [selectedPoint, setSelectedPoint] = useState<TOffer | undefined>(undefined);
+
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -95,11 +100,11 @@ function MainScreen ({ cards }: TMainScreen): JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <CardsLayout cards={ cards } />
+              <CardsLayout onPlaceHover={setSelectedPoint} cards={ cards } />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map" >
-                {/* <Map city={getAmsterdam()} points={ cards } /> */}
+                <Map selected={selectedPoint} city={getAmsterdam()} points={ cards } />
               </section>
             </div>
           </div>

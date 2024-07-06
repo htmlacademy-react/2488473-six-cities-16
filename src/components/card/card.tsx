@@ -1,21 +1,18 @@
-
-import { useState } from 'react';
+import React from 'react';
 import { TOffer } from '../../types/global';
 
 import { Link } from 'react-router-dom';
 
 type TCard = {
   info: TOffer;
+  onPlaceHover: (placeName: TOffer) => void;
 }
 
-function Card ({ info }: TCard): JSX.Element {
-  const [isHover, setHover] = useState<boolean>(false);
-
+function Card ({ info, onPlaceHover }: TCard): JSX.Element {
   return (
     <div
       className="cities__card place-card"
-      onMouseLeave={() => setHover((prevState) => !prevState)}
-      onMouseEnter={() => setHover((prevState) => !prevState)}
+      onMouseEnter={() => onPlaceHover(info)}
     >
       {info.isPremium ? <div className="place-card__mark"><span>Premium</span></div> : null}
       <div className="cities__image-wrapper place-card__image-wrapper">

@@ -20,7 +20,7 @@ export function getRandomCard (): TOffer[] {
       title: 'Place with monkey',
       type: 'house',
       city: {
-        name: 'Amsterdam',
+        name: 'Parish',
         location: {
           latitude: 52.3909553943508,
           longitude: 4.85309666406198,
@@ -46,7 +46,7 @@ export function getRandomCard (): TOffer[] {
       title: 'Very exhausted place',
       type: 'room',
       city: {
-        name: 'Amsterdam',
+        name: 'London',
         location: {
           latitude: 52.3609553943508,
           longitude: 4.85309666406198,
@@ -98,7 +98,7 @@ export function getRandomCard (): TOffer[] {
       title: 'Get emotion',
       type: 'apartment',
       city: {
-        name: 'Amsterdam',
+        name: 'Mexico',
         location: {
           latitude: 52.3809553943508,
           longitude: 4.939309666406198,
@@ -110,26 +110,30 @@ export function getRandomCard (): TOffer[] {
 }
 
 export function getAmsterdam (): TCity {
-  return ({
-    name: 'Amsterdam',
-    location: {
-      latitude: 52.35514938496378,
-      longitude: 4.673877537499948,
-      zoom: 8
+  return (
+    {
+      name: 'Amsterdam',
+      location: {
+        latitude: 52.35514938496378,
+        longitude: 4.673877537499948,
+        zoom: 10
+      }
     }
-  });
+  );
 }
 
 export function getRandomReviews (): TReview[] {
-  return [{
-    comment: 'good place, good emotion, good self',
-    date: '2019-05-08T14:13:56.569Z',
-    id: '1234',
-    user: {
-      avatarUrl: 'https://static2.tgstat.ru/channels/_0/c8/c8fcdb7e4656ff95aa29067c6ce4dc85.jpg',
-      isPro: true,
-      name: 'Max'
-    },
-    rating: 4
-  }];
+  return [
+    {
+      comment: 'good place, good emotion, good self',
+      date: '2019-05-08T14:13:56.569Z',
+      id: '1234',
+      user: {
+        avatarUrl: 'https://static2.tgstat.ru/channels/_0/c8/c8fcdb7e4656ff95aa29067c6ce4dc85.jpg',
+        isPro: true,
+        name: 'Max'
+      },
+      rating: 4
+    }
+  ];
 }

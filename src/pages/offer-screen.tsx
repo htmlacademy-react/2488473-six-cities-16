@@ -1,6 +1,8 @@
 import ReviewLayout from '../components/layouts/review-layout/review-layout';
 import Logo from '../components/logo/logo';
+import Map from '../components/map/map';
 import { AuthorizationStatus } from '../const';
+import { getAmsterdam, getRandomCard } from '../mocks/generateMock';
 import { TReview } from '../types/global';
 
 
@@ -159,7 +161,9 @@ function OfferScreen ({ authorization, reviews }: TOfferScreen): JSX.Element {
               <ReviewLayout authorization={authorization} reviews={reviews} />
             </div>
           </div>
-          <section className="offer__map map"></section>
+          <section className="offer__map map">
+            <Map city={getAmsterdam()} points={getRandomCard().slice(0, 3)} selected={undefined}/>
+          </section>
         </section>
         <div className="container">
           <section className="near-places places">
