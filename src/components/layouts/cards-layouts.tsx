@@ -5,7 +5,7 @@ import Card from '../card/card';
 
 type TCardsLayout = {
   cards: TOffer[];
-  onPlaceHover: (placeName: TOffer) => void;
+  onPlaceHover: (placeName: TOffer| undefined) => void;
 }
 
 function CardsLayout ({ cards, onPlaceHover }: TCardsLayout): JSX.Element {

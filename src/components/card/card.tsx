@@ -5,13 +5,14 @@ import { Link } from 'react-router-dom';
 
 type TCard = {
   info: TOffer;
-  onPlaceHover: (placeName: TOffer) => void;
+  onPlaceHover: (placeName: TOffer | undefined) => void;
 }
 
 function Card ({ info, onPlaceHover }: TCard): JSX.Element {
   return (
     <div
       className="cities__card place-card"
+      onMouseLeave={() => onPlaceHover(undefined)}
       onMouseEnter={() => onPlaceHover(info)}
     >
       {info.isPremium ? <div className="place-card__mark"><span>Premium</span></div> : null}
