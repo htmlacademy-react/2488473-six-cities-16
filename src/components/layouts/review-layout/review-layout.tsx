@@ -15,9 +15,12 @@ type TReviewLayout = {
 function ReviewLayout ({ reviews, authorization }: TReviewLayout): JSX.Element {
   return (
     <section className="offer__reviews reviews">
-      <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews.length}</span></h2>
+      <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews.length > 10 ? '10' : reviews.length}</span></h2>
       <ul className="reviews__list">
-        {reviews.map((item) => <Review key={item.comment} info={item} />)}
+        {reviews
+          .slice(0, 10)
+          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+          .map((item) => <Review key={item.comment} info={item} />)}
       </ul>
 
       { authorization === AuthorizationStatus.Auth ? <ReviewForm /> : null }

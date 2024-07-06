@@ -134,6 +134,28 @@ export function getRandomReviews (): TReview[] {
         name: 'Max'
       },
       rating: 4
+    },
+    {
+      comment: 'good place, good emotion, good self',
+      date: '2018-05-08T14:13:56.569Z',
+      id: '1234',
+      user: {
+        avatarUrl: 'https://static2.tgstat.ru/channels/_0/c8/c8fcdb7e4656ff95aa29067c6ce4dc85.jpg',
+        isPro: true,
+        name: 'Max'
+      },
+      rating: 4
+    },
+    {
+      comment: 'good place, good emotion, good self',
+      date: '2021-05-08T14:13:56.569Z',
+      id: '1234',
+      user: {
+        avatarUrl: 'https://static2.tgstat.ru/channels/_0/c8/c8fcdb7e4656ff95aa29067c6ce4dc85.jpg',
+        isPro: true,
+        name: 'Max'
+      },
+      rating: 4
     }
   ];
 }

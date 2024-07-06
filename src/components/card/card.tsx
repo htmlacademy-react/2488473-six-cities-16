@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TOffer } from '../../types/global';
 
 import { Link } from 'react-router-dom';
@@ -9,6 +9,8 @@ type TCard = {
 }
 
 function Card ({ info, onPlaceHover }: TCard): JSX.Element {
+  const [isFavorite, setFavorite] = useState<boolean>(info.isFavorite);
+
   return (
     <div
       className="cities__card place-card"
@@ -27,7 +29,7 @@ function Card ({ info, onPlaceHover }: TCard): JSX.Element {
             <b className="place-card__price-value">&euro;{info.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={`place-card__bookmark-button button ${info.isFavorite ? 'place-card__bookmark-button--active' : null}`} type="button">
+          <button className={`place-card__bookmark-button button ${isFavorite && 'place-card__bookmark-button--active'}`} type="button" onClick={() => setFavorite((state) => !state)}>
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>
