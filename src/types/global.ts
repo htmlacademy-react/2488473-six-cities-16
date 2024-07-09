@@ -50,3 +50,5 @@ export type AuthenticatedProperties = {
   avatarUrl: string;
   isPro: boolean;
 }
+
+export type TSortType = 'popular' | 'price: low to high' | 'price: high to low' | 'top rated first';

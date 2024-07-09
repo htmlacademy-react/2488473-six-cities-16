@@ -1,18 +1,19 @@
 import React from 'react';
 
-import { AuthorizationStatus } from '../../../const';
-import { TReview } from '../../../types/global';
-
 import ReviewForm from '../../forms/review-form';
 import Review from '../../review/review';
 
+import { useAppSelector } from '../../../hooks';
 
-type TReviewLayout = {
-  reviews: TReview[];
-  authorization: AuthorizationStatus;
-}
 
-function ReviewLayout ({ reviews, authorization }: TReviewLayout): JSX.Element {
+function ReviewLayout (): JSX.Element {
+  const reviews = useAppSelector((state) => state.reviews);
+  const reviewFormRequire = useAppSelector((state) => {
+    if (state.authorization instanceof Object) {
+      return <ReviewForm />;
+    }
+  });
+
   return (
     <section className="offer__reviews reviews">
       <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews.length > 10 ? '10' : reviews.length}</span></h2>
@@ -23,7 +24,7 @@ function ReviewLayout ({ reviews, authorization }: TReviewLayout): JSX.Element {
           .map((item) => <Review key={item.comment} info={item} />)}
       </ul>
 
-      { authorization === AuthorizationStatus.Auth ? <ReviewForm /> : null }
+      { reviewFormRequire }
     </section>
   );
 }

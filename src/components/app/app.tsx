@@ -1,13 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { AuthorizationStatus } from '../../const';
-
-import FavoriteScreen from '../../pages/favorite-screen';
 import MainScreen from '../../pages/main-screen';
+import FavoriteScreen from '../../pages/favorite-screen';
 import OfferScreen from '../../pages/offer-screen';
+
+import AuthProtect from '../auth-protect/auth-protect';
 import PrivateRoute from '../private-route/private-route';
 import Logo from '../logo/logo';
-import AuthProtect from '../auth-protect/auth-protect';
 
 
 function App (): JSX.Element {
@@ -15,14 +14,14 @@ function App (): JSX.Element {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<MainScreen />}/>
-        <Route path='/login' element={<AuthProtect authorization={AuthorizationStatus.NoAuth} />}/>
+        <Route path='/login' element={<AuthProtect />}/>
         <Route path='/favorites' element={
-          <PrivateRoute authorization={AuthorizationStatus.Auth}>
+          <PrivateRoute>
             <FavoriteScreen />
           </PrivateRoute>
         }
         />
-        <Route path='/offer/:id' element={<OfferScreen authorization={AuthorizationStatus.NoAuth} />}/>
+        <Route path='/offer/:id' element={<OfferScreen />}/>
         <Route path='*' element={
           <>
             <h1>404</h1>

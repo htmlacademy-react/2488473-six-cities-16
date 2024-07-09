@@ -1,14 +1,17 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { setAuth, setCurrentCity } from './rootAction';
-import { TCity, TOffer, TReview, AuthenticatedProperties } from '../types/global';
-import { mockOffers, mockReviews } from '../mocks/generateMock';
+
+import { TCity, TOffer, TReview, AuthenticatedProperties, TSortType } from '../types/global';
 import { AuthorizationStatus, CitiesLocations } from '../const';
+
+import { setAuth, setCurrentCity, setSort } from './rootAction';
+import { mockOffers, mockReviews } from '../mocks/generateMock';
 
 type TInitialState = {
   currentCity: TCity;
   offers: TOffer[];
   favorites: TOffer[];
   reviews: TReview[];
+  currentSort: TSortType;
   authorization: AuthorizationStatus.NoAuth | AuthenticatedProperties;
 }
 
@@ -18,7 +21,14 @@ const initialState: TInitialState = {
   offers: mockOffers,
   favorites: [],
   reviews: mockReviews,
-  authorization: AuthorizationStatus.NoAuth,
+  currentSort: 'popular',
+  authorization: {
+    email: 'x6modee@gmail.com',
+    token: 'eDZtb2RlZUBnbWFpbC5jb20=',
+    name: 'x6modee',
+    avatarUrl: 'https://16.design.htmlacademy.pro/static/avatar/4.jpg',
+    isPro: false
+  },
 };
 
 const rootReducer = createReducer(initialState, (builder) => {
@@ -28,6 +38,9 @@ const rootReducer = createReducer(initialState, (builder) => {
     })
     .addCase(setAuth, (state, action) => {
       state.authorization = action.payload;
+    })
+    .addCase(setSort, (state, action) => {
+      state.currentSort = action.payload;
     });
 });
 

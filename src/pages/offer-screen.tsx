@@ -1,16 +1,8 @@
 import Header from '../components/header/header';
 import ReviewLayout from '../components/layouts/review-layout/review-layout';
-import { AuthorizationStatus } from '../const';
-import { useAppSelector } from '../hooks';
 
 
-type TOfferScreen = {
-  authorization: AuthorizationStatus;
-}
-
-function OfferScreen ({ authorization }: TOfferScreen): JSX.Element {
-  const reviews = useAppSelector((state) => state.reviews);
-
+function OfferScreen (): JSX.Element {
   return (
     <div className="page">
       <Header />
@@ -132,7 +124,7 @@ function OfferScreen ({ authorization }: TOfferScreen): JSX.Element {
                   </p>
                 </div>
               </div>
-              <ReviewLayout authorization={authorization} reviews={reviews} />
+              <ReviewLayout />
             </div>
           </div>
           <section className="offer__map map">
