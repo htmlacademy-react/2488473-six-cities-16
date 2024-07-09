@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
 
 import App from './components/app/app';
-import { getRandomCard, getRandomReviews } from './mocks/generateMock';
+import store from './store/store';
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -10,9 +12,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App
-      cards={getRandomCard()}
-      reviews={getRandomReviews()}
-    />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
 );

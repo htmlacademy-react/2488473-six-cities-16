@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import leaflet from 'leaflet';
 import useMap from '../../hooks/useMap';
 import { TCity, TOffer } from '../../types/global';
@@ -12,24 +12,29 @@ type TMap = {
   selected: TOffer | undefined;
 }
 
+
+const defaultCustomIcon: leaflet.Icon = leaflet.icon({
+  iconUrl: URL_MARKER_DEFAULT,
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
+
+const currentCustomIcon: leaflet.Icon = leaflet.icon({
+  iconUrl: URL_MARKER_CURRENT,
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
+
+
 function Map ({ city, points, selected }: TMap): JSX.Element {
+
   const mapRef = useRef<HTMLDivElement | null>(null);
   const map = useMap(mapRef, city);
 
-  const defaultCustomIcon: leaflet.Icon = leaflet.icon({
-    iconUrl: URL_MARKER_DEFAULT,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
-
-  const currentCustomIcon: leaflet.Icon = leaflet.icon({
-    iconUrl: URL_MARKER_CURRENT,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
-
   useEffect(() => {
     if (map) {
+      const markerLayer = leaflet.layerGroup().addTo(map);
+
       points.forEach((point) => {
         let iconTemplate;
 
@@ -39,15 +44,20 @@ function Map ({ city, points, selected }: TMap): JSX.Element {
           iconTemplate = defaultCustomIcon;
         }
 
-        leaflet
+        const marker = leaflet
           .marker({
-            lat: point.city.location.latitude,
-            lng: point.city.location.longitude,
+            lat: point.location.latitude,
+            lng: point.location.longitude,
           }, {
             icon: iconTemplate,
-          })
-          .addTo(map);
+          });
+
+        marker.addTo(markerLayer);
       });
+
+      return () => {
+        map.removeLayer(markerLayer);
+      };
     }
   }, [map, points, selected]);
 
