@@ -17,7 +17,7 @@ function CardsLayout ({ cards, onPlaceHover }: TCardsLayout): JSX.Element {
   let offers: TOffer[] = [];
 
   switch (sortType.toLowerCase()) {
-    case 'price: low to high': 
+    case 'price: low to high':
       offers = sortByPrice(cards);
       break;
     case 'price: high to low':

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useAppDispatch } from '../../hooks';
 
 import { setSort } from '../../store/rootAction';

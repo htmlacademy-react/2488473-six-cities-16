@@ -38,6 +38,17 @@ export type TOffer = {
   rating: number;
 };
 
+type TOfferDetailProperties = {
+  host: TUser;
+  description: string;
+  images: string[];
+  goods: string[];
+  bedrooms: number;
+  maxAdults: number;
+}
+
+export type TOfferDetail = TOffer & TOfferDetailProperties;
+
 export type TCityName = 'Paris' | 'Cologne' | 'Brussels' | 'Amsterdam' | 'Hamburg' | 'Dusseldorf';
 
 export type State = ReturnType<typeof store.getState>;

@@ -1,12 +1,37 @@
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { TOfferDetail } from '../types/global';
+
 import Header from '../components/header/header';
 import ReviewLayout from '../components/layouts/review-layout/review-layout';
+import Loader from '../components/loader/loader';
 
+
+function InsideItem ({ text }: { text: string }) {
+  return (
+    <li className="offer__inside-item" style={{ textTransform: 'capitalize' }}>
+      {text}
+    </li>
+  );
+}
 
 function OfferScreen (): JSX.Element {
-  return (
+  const [data, setData] = useState<TOfferDetail>();
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch(`https://16.design.htmlacademy.pro/six-cities/offers/${id}`)
+      .then((res) => res.status === 404 ? navigate('/') : res.json())
+      .then((res: TOfferDetail) => setData(res))
+      .catch(() => navigate('/'));
+  }, []);
+
+  return data instanceof Object ? (
     <div className="page">
       <Header />
-
       <main className="page__main page__main--offer">
         <section className="offer">
           <div className="offer__gallery-container container">
@@ -33,10 +58,10 @@ function OfferScreen (): JSX.Element {
           </div>
           <div className="offer__container container">
             <div className="offer__wrapper">
-              <div className="offer__mark"><span>Premium</span></div>
+              {(data?.isPremium && <div className="offer__mark"><span>Premium</span></div>) || null}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">
-                  Beautiful &amp; luxurious studio at great location
+                  {(data?.title) || 'Неудача'}
                 </h1>
                 <button className="offer__bookmark-button button" type="button">
                   <svg className="offer__bookmark-icon" width="31" height="33">
@@ -47,84 +72,50 @@ function OfferScreen (): JSX.Element {
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{width: '80%'}}></span>
+                  <span style={{width: `${Math.round(data?.rating) * 20}%`}}></span>
                   <span className='visually-hidden'>Rating</span>
                 </div>
-                <span className="offer__rating-value rating__value">4.8</span>
+                <span className="offer__rating-value rating__value">{(data?.rating) || 'Неудача'}</span>
               </div>
               <ul className="offer__features">
-                <li className="offer__feature offer__feature--entire">
-                  Apartment
+                <li className="offer__feature offer__feature--entire" style={{ textTransform: 'capitalize' }}>
+                  {(data?.type) || 'Неудача'}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  3 Bedrooms
+                  {(data?.bedrooms) || 'Неудача'} Bedrooms
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                  Max 4 adults
+                  Max {(data?.maxAdults) || 'Неудача'} adults
                 </li>
               </ul>
               <div className="offer__price">
-                <b className="offer__price-value">&euro;120</b>
+                <b className="offer__price-value">&euro;{data?.price}</b>
                 <span className="offer__price-text">&nbsp;night</span>
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
                 <ul className="offer__inside-list">
-                  <li className="offer__inside-item">
-                    Wi-Fi
-                  </li>
-                  <li className="offer__inside-item">
-                    Washing machine
-                  </li>
-                  <li className="offer__inside-item">
-                    Towels
-                  </li>
-                  <li className="offer__inside-item">
-                    Heating
-                  </li>
-                  <li className="offer__inside-item">
-                    Coffee machine
-                  </li>
-                  <li className="offer__inside-item">
-                    Baby seat
-                  </li>
-                  <li className="offer__inside-item">
-                    Kitchen
-                  </li>
-                  <li className="offer__inside-item">
-                    Dishwasher
-                  </li>
-                  <li className="offer__inside-item">
-                    Cabel TV
-                  </li>
-                  <li className="offer__inside-item">
-                    Fridge
-                  </li>
+                  {data?.goods.map((item) => <InsideItem key={item} text={item}/>)}
                 </ul>
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
-                  <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
-                    <img className="offer__avatar user__avatar" src="img/avatar-angelina.jpg" width="74" height="74" alt="Host avatar" />
+                  <div className={`offer__avatar-wrapper user__avatar-wrapper ${data.host.isPro && 'offer__avatar-wrapper--pro'}`}>
+                    <img className="offer__avatar user__avatar" src={data.host.avatarUrl} width="74" height="74" alt="Host avatar" />
                   </div>
                   <span className="offer__user-name">
-                    Angelina
+                    {data.host.name}
                   </span>
-                  <span className="offer__user-status">
-                    Pro
-                  </span>
+                  {data.host.isPro && <span className="offer__user-status">Pro</span>}
                 </div>
                 <div className="offer__description">
                   <p className="offer__text">
-                    A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
-                  </p>
-                  <p className="offer__text">
-                    An independent House, strategically located between Rembrand Square and National Opera, but where the bustle of the city comes to rest in this alley flowery and colorful.
+                    {data.description}
                   </p>
                 </div>
               </div>
-              <ReviewLayout />
+              <ReviewLayout id={id}/>
             </div>
           </div>
           <section className="offer__map map">
@@ -238,6 +229,8 @@ function OfferScreen (): JSX.Element {
         </div>
       </main>
     </div>
+  ) : (
+    <Loader />
   );
 }
 
