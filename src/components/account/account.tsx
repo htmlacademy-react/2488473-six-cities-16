@@ -1,10 +1,17 @@
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Link, Navigate } from 'react-router-dom';
+import { fetchLogout } from '../../store/apiAction';
 
 
 function Account (): JSX.Element {
   const accountInfo = useAppSelector((state) => state.authorization);
   const favoritesLength = useAppSelector((state) => state.favorites.length);
+
+  const dispatch = useAppDispatch();
+
+  const onLogout = () => {
+    dispatch(fetchLogout());
+  };
 
   return accountInfo instanceof Object ? (
     <nav className="header__nav">
@@ -18,7 +25,7 @@ function Account (): JSX.Element {
           </Link>
         </li>
         <li className="header__nav-item">
-          <a className="header__nav-link" href="#">
+          <a className="header__nav-link" href="#" onClick={onLogout}>
             <span className="header__signout">Sign out</span>
           </a>
         </li>

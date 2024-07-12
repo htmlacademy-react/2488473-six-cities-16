@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import leaflet from 'leaflet';
 import useMap from '../../hooks/useMap';
 import { TCity, TOffer } from '../../types/global';
@@ -35,11 +35,19 @@ function Map ({ city, points, selected }: TMap): JSX.Element {
     if (map) {
       const markerLayer = leaflet.layerGroup().addTo(map);
 
+      map.flyTo(
+        [
+          city.location.latitude,
+          city.location.longitude,
+        ],
+        city.location.zoom
+      );
+
       points.forEach((point) => {
         let iconTemplate;
 
         if (typeof selected !== 'undefined') {
-          iconTemplate = point.title === selected.title ? currentCustomIcon : defaultCustomIcon;
+          iconTemplate = point.id === selected.id ? currentCustomIcon : defaultCustomIcon;
         } else {
           iconTemplate = defaultCustomIcon;
         }
@@ -59,7 +67,7 @@ function Map ({ city, points, selected }: TMap): JSX.Element {
         map.removeLayer(markerLayer);
       };
     }
-  }, [map, points, selected]);
+  }, [map, points, selected, city]);
 
   return (
     <div style={{ height: '100%' }} ref={mapRef} ></div>

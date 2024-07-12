@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import ReviewForm from '../../forms/review-form';
 import Review from '../../review/review';

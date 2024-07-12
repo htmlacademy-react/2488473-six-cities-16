@@ -3,8 +3,8 @@ import { createReducer } from '@reduxjs/toolkit';
 import { TCity, TOffer, TReview, AuthenticatedProperties, TSortType } from '../types/global';
 import { AuthorizationStatus, CitiesLocations } from '../const';
 
-import { setAuth, setCurrentCity, setSort } from './rootAction';
-import { mockOffers, mockReviews } from '../mocks/generateMock';
+import { setAuth, setCurrentCity, toggleFavorites, setOffers, setOffersLoading, setSort, setAuthLoading } from './rootAction';
+
 
 type TInitialState = {
   currentCity: TCity;
@@ -12,23 +12,21 @@ type TInitialState = {
   favorites: TOffer[];
   reviews: TReview[];
   currentSort: TSortType;
-  authorization: AuthorizationStatus.NoAuth | AuthenticatedProperties;
+  authorization: AuthorizationStatus | AuthenticatedProperties;
+  isOffersLoading: boolean;
+  isAuthLoading: boolean;
 }
 
 
 const initialState: TInitialState = {
   currentCity: CitiesLocations[0],
-  offers: mockOffers,
+  offers: [],
   favorites: [],
-  reviews: mockReviews,
+  reviews: [],
   currentSort: 'popular',
-  authorization: {
-    email: 'x6modee@gmail.com',
-    token: 'eDZtb2RlZUBnbWFpbC5jb20=',
-    name: 'x6modee',
-    avatarUrl: 'https://16.design.htmlacademy.pro/static/avatar/4.jpg',
-    isPro: false
-  },
+  authorization: AuthorizationStatus.Unknown,
+  isOffersLoading: false,
+  isAuthLoading: false,
 };
 
 const rootReducer = createReducer(initialState, (builder) => {
@@ -41,6 +39,22 @@ const rootReducer = createReducer(initialState, (builder) => {
     })
     .addCase(setSort, (state, action) => {
       state.currentSort = action.payload;
+    })
+    .addCase(setOffers, (state, action) => {
+      state.offers = action.payload;
+    })
+    .addCase(setOffersLoading, (state, action) => {
+      state.isOffersLoading = action.payload;
+    })
+    .addCase(toggleFavorites, (state, action) => {
+      if (state.favorites.slice().filter((item) => item.id === action.payload.id).length === 0) {
+        state.favorites = [...state.favorites, action.payload];
+        return;
+      }
+      state.favorites = state.favorites.slice().filter((item) => item.id !== action.payload.id);
+    })
+    .addCase(setAuthLoading, (state, action) => {
+      state.isAuthLoading = action.payload;
     });
 });
 

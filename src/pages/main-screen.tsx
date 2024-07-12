@@ -7,12 +7,18 @@ import Sort from '../components/sort/sort';
 import Filter from '../components/filter/filter';
 import { useAppSelector } from '../hooks';
 import Header from '../components/header/header';
+import Loader from '../components/loader/loader';
 
 
 function MainScreen (): JSX.Element {
+  const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
   const currentCity = useAppSelector((state) => state.currentCity);
   const offers = useAppSelector((state) => state.offers.filter((item) => item.city.name === state.currentCity.name));
   const [selectedPoint, setSelectedPoint] = useState<TOffer | undefined>(undefined);
+
+  if (isOffersLoading) {
+    return (<Loader />);
+  }
 
   return (
     <div className="page page--gray page--main">

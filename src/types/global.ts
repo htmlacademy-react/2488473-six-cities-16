@@ -13,8 +13,8 @@ export type TLocation = {
 }
 
 export type TCity = {
-  name: TCityName;
-  location: TLocation;
+  readonly name: TCityName;
+  readonly location: TLocation;
 }
 
 export type TReview = {

@@ -6,7 +6,14 @@ import { TOfferDetail } from '../types/global';
 import Header from '../components/header/header';
 import ReviewLayout from '../components/layouts/review-layout/review-layout';
 import Loader from '../components/loader/loader';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { toggleFavorites } from '../store/rootAction';
 
+
+function getFormatRate (rate: number) {
+  const needFormat: boolean = Number.isInteger(rate);
+  return needFormat ? `${rate}.0` : rate;
+}
 
 function InsideItem ({ text }: { text: string }) {
   return (
@@ -18,9 +25,29 @@ function InsideItem ({ text }: { text: string }) {
 
 function OfferScreen (): JSX.Element {
   const [data, setData] = useState<TOfferDetail>();
+  const offer = data instanceof Object ? data : null;
 
   const { id } = useParams();
+
+  const isAuth = useAppSelector((state) => state.authorization);
+  const isFavorite = useAppSelector((state) => state.favorites.filter((item) => item.id === offer?.id).length > 0);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const [isToggle, setToggle] = useState<boolean>(isFavorite);
+
+  useEffect(() => {
+    setToggle(isFavorite);
+  }, [isFavorite]);
+
+  function handleClickButton (): void {
+    if (isAuth instanceof Object) {
+      dispatch(toggleFavorites(offer));
+      setToggle((prev) => !prev);
+      return;
+    }
+    navigate('/login');
+  }
 
   useEffect(() => {
     fetch(`https://16.design.htmlacademy.pro/six-cities/offers/${id}`)
@@ -58,12 +85,12 @@ function OfferScreen (): JSX.Element {
           </div>
           <div className="offer__container container">
             <div className="offer__wrapper">
-              {(data?.isPremium && <div className="offer__mark"><span>Premium</span></div>) || null}
+              {data.isPremium && <div className="offer__mark"><span>Premium</span></div>}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">
-                  {(data?.title) || 'Неудача'}
+                  {data.title}
                 </h1>
-                <button className="offer__bookmark-button button" type="button">
+                <button className={`offer__bookmark-button button ${isToggle && 'offer__bookmark-button--active'}`} type="button" onClick={() => typeof handleClickButton === 'function' && handleClickButton()}>
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
@@ -72,10 +99,10 @@ function OfferScreen (): JSX.Element {
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{width: `${Math.round(data?.rating) * 20}%`}}></span>
+                  <span style={{width: `${Math.round(data.rating) * 20}%`}}></span>
                   <span className='visually-hidden'>Rating</span>
                 </div>
-                <span className="offer__rating-value rating__value">{(data?.rating) || 'Неудача'}</span>
+                <span className="offer__rating-value rating__value">{getFormatRate(data.rating)}</span>
               </div>
               <ul className="offer__features">
                 <li className="offer__feature offer__feature--entire" style={{ textTransform: 'capitalize' }}>

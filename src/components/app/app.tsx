@@ -7,11 +7,13 @@ import OfferScreen from '../../pages/offer-screen';
 import AuthProtect from '../auth-protect/auth-protect';
 import PrivateRoute from '../private-route/private-route';
 import Logo from '../logo/logo';
+import ScrollToTop from '../../utils';
 
 
 function App (): JSX.Element {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path='/' element={<MainScreen />}/>
         <Route path='/login' element={<AuthProtect />}/>

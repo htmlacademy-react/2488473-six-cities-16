@@ -1,14 +1,14 @@
 import { TOffer } from '../../types/global';
 import { useAppSelector } from '../../hooks';
 
-import { sortByPrice, sortByRating } from '../../utils/sort-funcs';
+import { sortByPrice, sortByRating } from '../../utils';
 
 import Card from '../card/card';
 
 
 type TCardsLayout = {
   cards: TOffer[];
-  onPlaceHover: (placeName: TOffer| undefined) => void;
+  onPlaceHover: (placeName: TOffer | undefined) => void;
 }
 
 function CardsLayout ({ cards, onPlaceHover }: TCardsLayout): JSX.Element {

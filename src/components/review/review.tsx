@@ -1,4 +1,3 @@
-import React from 'react';
 import { TReview } from '../../types/global';
 
 const MONTHS: Array<string> = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November'];

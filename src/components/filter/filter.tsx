@@ -13,6 +13,7 @@ function FilterElement ({ city }: TFilterElement): JSX.Element {
   const dispatch = useAppDispatch();
 
   const handleButtonClick = () => {
+    window.scrollTo(0, 0);
     dispatch(
       setCurrentCity(CitiesLocations.filter((item) => item.name.toLowerCase() === city.toLowerCase())[0])
     );
