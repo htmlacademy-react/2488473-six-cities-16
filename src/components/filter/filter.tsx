@@ -2,6 +2,7 @@ import { CitiesLocations } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { TCityName } from '../../types/global';
 import { setCurrentCity } from '../../store/rootAction';
+import { memo } from 'react';
 
 type TFilterElement = {
   city: TCityName;
@@ -40,4 +41,4 @@ function Filter (): JSX.Element {
   );
 }
 
-export default Filter;
+export default memo(Filter);

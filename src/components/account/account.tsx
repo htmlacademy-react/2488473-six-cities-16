@@ -1,6 +1,8 @@
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { Link, Navigate } from 'react-router-dom';
 import { fetchLogout } from '../../store/apiAction';
+
+import { Link, Navigate } from 'react-router-dom';
+import { memo } from 'react';
 
 
 function Account (): JSX.Element {
@@ -45,4 +47,4 @@ function Account (): JSX.Element {
   );
 }
 
-export default Account;
+export default memo(Account);

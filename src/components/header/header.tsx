@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Account from '../account/account';
 import Logo from '../logo/logo';
 
@@ -19,4 +20,4 @@ function Header ({ showAccount = true }: THeader): JSX.Element {
   );
 }
 
-export default Header;
+export default memo(Header);

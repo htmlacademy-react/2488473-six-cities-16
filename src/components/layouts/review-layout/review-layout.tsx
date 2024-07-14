@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import ReviewForm from '../../forms/review-form';
 import Review from '../../review/review';
@@ -55,4 +55,4 @@ function ReviewLayout ({ id }: { id: string | undefined }): JSX.Element {
   );
 }
 
-export default ReviewLayout;
+export default memo(ReviewLayout);

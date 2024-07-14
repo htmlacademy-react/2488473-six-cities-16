@@ -1,3 +1,5 @@
+import React, { memo } from 'react';
+
 import { TOffer } from '../../types/global';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -72,4 +74,4 @@ function Card ({ info, onPlaceHover, small }: TCard): JSX.Element {
   );
 }
 
-export default Card;
+export default memo(Card, );

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useAppDispatch } from '../../hooks';
 
 import { setSort } from '../../store/rootAction';
@@ -37,4 +37,4 @@ function Sort (): JSX.Element {
   );
 }
 
-export default Sort;
+export default memo(Sort);

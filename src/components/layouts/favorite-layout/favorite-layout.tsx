@@ -4,6 +4,7 @@ import { TOffer, TOfferDetail } from '../../../types/global';
 import Card from '../../card/card';
 import { setCurrentCity } from '../../../store/rootAction';
 import { CitiesLocations } from '../../../const';
+import { memo } from 'react';
 
 
 type TFavoriteLayout = {
@@ -30,4 +31,4 @@ function FavoriteLayout ({ name, offers }: TFavoriteLayout): JSX.Element {
   ) : <div></div>;
 }
 
-export default FavoriteLayout;
+export default memo(FavoriteLayout);

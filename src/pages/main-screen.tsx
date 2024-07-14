@@ -1,13 +1,14 @@
+import { useState } from 'react';
+import { useAppSelector } from '../hooks';
+
 import { TOffer } from '../types/global';
 
-import CardsLayout from '../components/layouts/cards-layouts';
 import Map from '../components/map/map';
-import { useState } from 'react';
-import Sort from '../components/sort/sort';
-import Filter from '../components/filter/filter';
-import { useAppSelector } from '../hooks';
-import Header from '../components/header/header';
 import Loader from '../components/loader/loader';
+import CardsLayout from '../components/layouts/cards-layouts';
+import Header from '../components/header/header';
+import Filter from '../components/filter/filter';
+import Sort from '../components/sort/sort';
 
 
 function MainScreen (): JSX.Element {
