@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useAppSelector } from '../hooks';
 
 import { TOffer } from '../types/global';
@@ -14,8 +14,10 @@ import Sort from '../components/sort/sort';
 function MainScreen (): JSX.Element {
   const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
   const currentCity = useAppSelector((state) => state.currentCity);
-  const offers = useAppSelector((state) => state.offers.filter((item) => item.city.name === state.currentCity.name));
+  const cards = useAppSelector((state) => state.offers);
   const [selectedPoint, setSelectedPoint] = useState<TOffer | undefined>(undefined);
+
+  const offers = useMemo(() => cards.filter((item) => item.city.name === currentCity.name), []);
 
   if (isOffersLoading) {
     return (<Loader />);
