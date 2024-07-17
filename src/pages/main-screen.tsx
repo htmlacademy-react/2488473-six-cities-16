@@ -1,97 +1,44 @@
+import { useState } from 'react';
+import { useAppSelector } from '../hooks';
+
 import { TOffer } from '../types/global';
 
-import CardsLayout from '../components/layouts/cards-layouts';
-import Logo from '../components/logo/logo';
 import Map from '../components/map/map';
-import { getAmsterdam } from '../mocks/generateMock';
-import { useState } from 'react';
+import Loader from '../components/loader/loader';
+import CardsLayout from '../components/layouts/cards-layouts';
+import Header from '../components/header/header';
+import Filter from '../components/filter/filter';
 import Sort from '../components/sort/sort';
 
-type TMainScreen = {
-  cards: TOffer[];
-};
 
-function MainScreen ({ cards }: TMainScreen): JSX.Element {
+function MainScreen (): JSX.Element {
+  const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
+  const currentCity = useAppSelector((state) => state.currentCity);
+  const offers = useAppSelector((state) => state.offers.filter((item) => item.city.name === state.currentCity.name));
   const [selectedPoint, setSelectedPoint] = useState<TOffer | undefined>(undefined);
+
+  if (isOffersLoading) {
+    return (<Loader />);
+  }
 
   return (
     <div className="page page--gray page--main">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Logo />
-            </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
-        <div className="tabs">
-          <section className="locations container">
-            <ul className="locations__list tabs__list">
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Paris</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Cologne</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Brussels</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item tabs__item--active">
-                  <span>Amsterdam</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Hamburg</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Dusseldorf</span>
-                </a>
-              </li>
-            </ul>
-          </section>
-        </div>
+        <Filter />
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{cards.length} places to stay in Amsterdam</b>
+              <b className="places__found">{ offers.length } places to stay in { currentCity.name }</b>
               <Sort />
-              <CardsLayout onPlaceHover={setSelectedPoint} cards={ cards } />
+              <CardsLayout onPlaceHover={ setSelectedPoint } cards={ offers } />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map" >
-                <Map selected={selectedPoint} city={getAmsterdam()} points={ cards } />
+                <Map selected={ selectedPoint } city={ currentCity } points={ offers } />
               </section>
             </div>
           </div>

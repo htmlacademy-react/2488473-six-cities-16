@@ -1,3 +1,5 @@
+import store from '../store/store';
+
 type TUser = {
   name: string;
   avatarUrl: string;
@@ -11,8 +13,8 @@ export type TLocation = {
 }
 
 export type TCity = {
-  name: string;
-  location: TLocation;
+  readonly name: TCityName;
+  readonly location: TLocation;
 }
 
 export type TReview = {
@@ -25,16 +27,39 @@ export type TReview = {
 
 export type TOffer = {
   id: string;
-  price: number;
   title: string;
-  description: string;
-  rating: number;
-  bedrooms: number;
   type: 'apartment' | 'room' | 'house' | 'hotel';
+  price: number;
+  previewImage: string;
+  city: TCity;
+  location: TLocation;
   isFavorite: boolean;
   isPremium: boolean;
-  maxAdults: number;
-  host: TUser;
-  photo: string;
-  city: TCity;
+  rating: number;
 };
+
+type TOfferDetailProperties = {
+  host: TUser;
+  description: string;
+  images: string[];
+  goods: string[];
+  bedrooms: number;
+  maxAdults: number;
+}
+
+export type TOfferDetail = TOffer & TOfferDetailProperties;
+
+export type TCityName = 'Paris' | 'Cologne' | 'Brussels' | 'Amsterdam' | 'Hamburg' | 'Dusseldorf';
+
+export type State = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+export type AuthenticatedProperties = {
+  email: string;
+  token: string;
+  name: string;
+  avatarUrl: string;
+  isPro: boolean;
+}
+
+export type TSortType = 'popular' | 'price: low to high' | 'price: high to low' | 'top rated first';

@@ -1,46 +1,77 @@
+import { memo, useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toggleFavorites } from '../store/rootAction';
+
+import { TOffer, TOfferDetail } from '../types/global';
+
+import Loader from '../components/loader/loader';
+import Header from '../components/header/header';
 import ReviewLayout from '../components/layouts/review-layout/review-layout';
-import Logo from '../components/logo/logo';
 import Map from '../components/map/map';
-import { AuthorizationStatus } from '../const';
-import { getAmsterdam, getRandomCard } from '../mocks/generateMock';
-import { TReview } from '../types/global';
+import Card from '../components/card/card';
 
 
-type TOfferScreen = {
-  authorization: AuthorizationStatus;
-  reviews: TReview[];
+function getFormatRate (rate: number) {
+  const needFormat: boolean = Number.isInteger(rate);
+  return needFormat ? `${rate}.0` : rate;
 }
 
-function OfferScreen ({ authorization, reviews }: TOfferScreen): JSX.Element {
+function InsideItem ({ text }: { text: string }) {
   return (
-    <div className="page">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Logo />
-            </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <li className="offer__inside-item" style={{ textTransform: 'capitalize' }}>
+      {text}
+    </li>
+  );
+}
 
+const MemoizedInsideItem = memo(InsideItem);
+
+function OfferScreen (): JSX.Element {
+  const [data, setData] = useState<TOfferDetail | undefined>();
+  const [nearby, setNearby] = useState<TOffer[] | undefined>();
+
+  const [selectedPoint, setSelectedPoint] = useState<TOffer | undefined>(undefined);
+
+  const offer = data instanceof Object ? data : null;
+
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const { id } = useParams();
+
+  const isAuth = useAppSelector((state) => state.authorization);
+  const isFavorite = useAppSelector((state) => state.favorites.filter((item) => item.id === offer?.id).length > 0);
+
+  const [isToggle, setToggle] = useState<boolean>(isFavorite);
+
+  useEffect(() => {
+    setToggle(isFavorite);
+  }, [isFavorite]);
+
+  function handleClickButton (): void {
+    if (isAuth instanceof Object) {
+      dispatch(toggleFavorites(offer));
+      setToggle((prev) => !prev);
+      return;
+    }
+    navigate('/login');
+  }
+
+  useEffect(() => {
+    fetch(`https://16.design.htmlacademy.pro/six-cities/offers/${id}`)
+      .then((res) => res.status !== 200 ? navigate('/') : res.json())
+      .then((res: TOfferDetail) => setData(res))
+      .catch(() => navigate('/'));
+    fetch(`https://16.design.htmlacademy.pro/six-cities/offers/${id}/nearby`)
+      .then((res) => res.status !== 200 ? navigate('/') : res.json())
+      .then((res: TOffer[]) => setNearby(res))
+      .catch(() => navigate('/'));
+  }, []);
+
+  return data instanceof Object && nearby instanceof Object ? (
+    <div className="page">
+      <Header />
       <main className="page__main page__main--offer">
         <section className="offer">
           <div className="offer__gallery-container container">
@@ -67,12 +98,12 @@ function OfferScreen ({ authorization, reviews }: TOfferScreen): JSX.Element {
           </div>
           <div className="offer__container container">
             <div className="offer__wrapper">
-              <div className="offer__mark"><span>Premium</span></div>
+              {data.isPremium && <div className="offer__mark"><span>Premium</span></div>}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">
-                  Beautiful &amp; luxurious studio at great location
+                  {data.title}
                 </h1>
-                <button className="offer__bookmark-button button" type="button">
+                <button className={`offer__bookmark-button button ${isToggle && 'offer__bookmark-button--active'}`} type="button" onClick={() => typeof handleClickButton === 'function' && handleClickButton()}>
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
@@ -81,197 +112,68 @@ function OfferScreen ({ authorization, reviews }: TOfferScreen): JSX.Element {
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{width: '80%'}}></span>
+                  <span style={{width: `${Math.round(data.rating) * 20}%`}}></span>
                   <span className='visually-hidden'>Rating</span>
                 </div>
-                <span className="offer__rating-value rating__value">4.8</span>
+                <span className="offer__rating-value rating__value">{getFormatRate(data.rating)}</span>
               </div>
               <ul className="offer__features">
-                <li className="offer__feature offer__feature--entire">
-                  Apartment
+                <li className="offer__feature offer__feature--entire" style={{ textTransform: 'capitalize' }}>
+                  {data.type}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  3 Bedrooms
+                  {data?.bedrooms} Bedrooms
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                  Max 4 adults
+                  Max {data.maxAdults} adults
                 </li>
               </ul>
               <div className="offer__price">
-                <b className="offer__price-value">&euro;120</b>
+                <b className="offer__price-value">&euro;{data?.price}</b>
                 <span className="offer__price-text">&nbsp;night</span>
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
                 <ul className="offer__inside-list">
-                  <li className="offer__inside-item">
-                    Wi-Fi
-                  </li>
-                  <li className="offer__inside-item">
-                    Washing machine
-                  </li>
-                  <li className="offer__inside-item">
-                    Towels
-                  </li>
-                  <li className="offer__inside-item">
-                    Heating
-                  </li>
-                  <li className="offer__inside-item">
-                    Coffee machine
-                  </li>
-                  <li className="offer__inside-item">
-                    Baby seat
-                  </li>
-                  <li className="offer__inside-item">
-                    Kitchen
-                  </li>
-                  <li className="offer__inside-item">
-                    Dishwasher
-                  </li>
-                  <li className="offer__inside-item">
-                    Cabel TV
-                  </li>
-                  <li className="offer__inside-item">
-                    Fridge
-                  </li>
+                  {data.goods.map((item) => <MemoizedInsideItem key={item} text={item}/>)}
                 </ul>
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
-                  <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
-                    <img className="offer__avatar user__avatar" src="img/avatar-angelina.jpg" width="74" height="74" alt="Host avatar" />
+                  <div className={`offer__avatar-wrapper user__avatar-wrapper ${data.host.isPro && 'offer__avatar-wrapper--pro'}`}>
+                    <img className="offer__avatar user__avatar" src={data.host.avatarUrl} width="74" height="74" alt="Host avatar" />
                   </div>
                   <span className="offer__user-name">
-                    Angelina
+                    {data.host.name}
                   </span>
-                  <span className="offer__user-status">
-                    Pro
-                  </span>
+                  {data.host.isPro && <span className="offer__user-status">Pro</span>}
                 </div>
                 <div className="offer__description">
                   <p className="offer__text">
-                    A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
-                  </p>
-                  <p className="offer__text">
-                    An independent House, strategically located between Rembrand Square and National Opera, but where the bustle of the city comes to rest in this alley flowery and colorful.
+                    {data.description}
                   </p>
                 </div>
               </div>
-              <ReviewLayout authorization={authorization} reviews={reviews} />
+              <ReviewLayout id={id}/>
             </div>
           </div>
           <section className="offer__map map">
-            <Map city={getAmsterdam()} points={getRandomCard().slice(0, 3)} selected={undefined}/>
+            <Map city={data.city} points={[data, ...nearby]} selected={selectedPoint}/>
           </section>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <div className="near-places__list places__list">
-              <article className="near-places__card place-card">
-                <div className="near-places__image-wrapper place-card__image-wrapper">
-                  <a href="#">
-                    <img className="place-card__image" src="img/room.jpg" width="260" height="200" alt="Place image" />
-                  </a>
-                </div>
-                <div className="place-card__info">
-                  <div className="place-card__price-wrapper">
-                    <div className="place-card__price">
-                      <b className="place-card__price-value">&euro;80</b>
-                      <span className="place-card__price-text">&#47;&nbsp;night</span>
-                    </div>
-                    <button className="place-card__bookmark-button place-card__bookmark-button--active button" type="button">
-                      <svg className="place-card__bookmark-icon" width="18" height="19">
-                        <use xlinkHref="#icon-bookmark"></use>
-                      </svg>
-                      <span className="visually-hidden">In bookmarks</span>
-                    </button>
-                  </div>
-                  <div className="place-card__rating rating">
-                    <div className="place-card__stars rating__stars">
-                      <span style={{width: '80%'}}></span>
-                      <span className='visually-hidden'>Rating</span>
-                    </div>
-                  </div>
-                  <h2 className="place-card__name">
-                    <a href="#">Wood and stone place</a>
-                  </h2>
-                  <p className="place-card__type">Room</p>
-                </div>
-              </article>
-
-              <article className="near-places__card place-card">
-                <div className="near-places__image-wrapper place-card__image-wrapper">
-                  <a href="#">
-                    <img className="place-card__image" src="img/apartment-02.jpg" width="260" height="200" alt="Place image" />
-                  </a>
-                </div>
-                <div className="place-card__info">
-                  <div className="place-card__price-wrapper">
-                    <div className="place-card__price">
-                      <b className="place-card__price-value">&euro;132</b>
-                      <span className="place-card__price-text">&#47;&nbsp;night</span>
-                    </div>
-                    <button className="place-card__bookmark-button button" type="button">
-                      <svg className="place-card__bookmark-icon" width="18" height="19">
-                        <use xlinkHref="#icon-bookmark"></use>
-                      </svg>
-                      <span className="visually-hidden">To bookmarks</span>
-                    </button>
-                  </div>
-                  <div className="place-card__rating rating">
-                    <div className="place-card__stars rating__stars">
-                      <span style={{width: '80%'}}></span>
-                      <span className='visually-hidden'>Rating</span>
-                    </div>
-                  </div>
-                  <h2 className="place-card__name">
-                    <a href="#">Canal View Prinsengracht</a>
-                  </h2>
-                  <p className="place-card__type">Apartment</p>
-                </div>
-              </article>
-
-              <article className="near-places__card place-card">
-                <div className="place-card__mark">
-                  <span>Premium</span>
-                </div>
-                <div className="near-places__image-wrapper place-card__image-wrapper">
-                  <a href="#">
-                    <img className="place-card__image" src="img/apartment-03.jpg" width="260" height="200" alt="Place image" />
-                  </a>
-                </div>
-                <div className="place-card__info">
-                  <div className="place-card__price-wrapper">
-                    <div className="place-card__price">
-                      <b className="place-card__price-value">&euro;180</b>
-                      <span className="place-card__price-text">&#47;&nbsp;night</span>
-                    </div>
-                    <button className="place-card__bookmark-button button" type="button">
-                      <svg className="place-card__bookmark-icon" width="18" height="19">
-                        <use xlinkHref="#icon-bookmark"></use>
-                      </svg>
-                      <span className="visually-hidden">To bookmarks</span>
-                    </button>
-                  </div>
-                  <div className="place-card__rating rating">
-                    <div className="place-card__stars rating__stars">
-                      <span style={{width: '100%'}}></span>
-                      <span className='visually-hidden'>Rating</span>
-                    </div>
-                  </div>
-                  <h2 className="place-card__name">
-                    <a href="#">Nice, cozy, warm big bed apartment</a>
-                  </h2>
-                  <p className="place-card__type">Apartment</p>
-                </div>
-              </article>
+              {nearby.map((item) => <Card key={item.id} info={item} onPlaceHover={setSelectedPoint} />)}
             </div>
           </section>
         </div>
       </main>
     </div>
+  ) : (
+    <Loader />
   );
 }
 

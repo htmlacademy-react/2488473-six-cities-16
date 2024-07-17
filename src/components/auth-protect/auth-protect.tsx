@@ -1,13 +1,12 @@
 import { Navigate } from 'react-router-dom';
-import { AuthorizationStatus } from '../../const';
 import AuthScreen from '../../pages/auth-screen';
 
-type TAuthProtect = {
-  authorization: AuthorizationStatus;
-}
+import { useAppSelector } from '../../hooks';
 
-function AuthProtect ({ authorization }: TAuthProtect): JSX.Element {
-  return authorization === AuthorizationStatus.Auth ? <Navigate to='/' /> : <AuthScreen />;
+
+function AuthProtect (): JSX.Element {
+  const spaces = useAppSelector((state) => state.authorization instanceof Object ? <Navigate to='/'/> : <AuthScreen />);
+  return spaces;
 }
 
 export default AuthProtect;

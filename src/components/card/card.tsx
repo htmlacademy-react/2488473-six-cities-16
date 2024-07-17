@@ -1,35 +1,58 @@
-import React, { useState } from 'react';
+import { memo } from 'react';
+
 import { TOffer } from '../../types/global';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { toggleFavorites } from '../../store/rootAction';
+import { useEffect, useState } from 'react';
 
 type TCard = {
   info: TOffer;
-  onPlaceHover: (placeName: TOffer | undefined) => void;
+  onPlaceHover?: (placeName: TOffer | undefined) => void;
+  small?: boolean;
 }
 
-function Card ({ info, onPlaceHover }: TCard): JSX.Element {
-  const [isFavorite, setFavorite] = useState<boolean>(info.isFavorite);
+function Card ({ info, onPlaceHover, small }: TCard): JSX.Element {
+
+  const isAuth = useAppSelector((state) => state.authorization);
+  const isFavorite = useAppSelector((state) => state.favorites.filter((item) => item.id === info.id).length > 0);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const [isToggle, setToggle] = useState<boolean>(isFavorite);
+
+  useEffect(() => {
+    setToggle(isFavorite);
+  }, [isFavorite]);
+
+  function handleClickButton (): void {
+    if (isAuth instanceof Object) {
+      dispatch(toggleFavorites(info));
+      setToggle((prev) => !prev);
+      return;
+    }
+    navigate('/login');
+  }
 
   return (
     <div
-      className="cities__card place-card"
-      onMouseLeave={() => onPlaceHover(undefined)}
-      onMouseEnter={() => onPlaceHover(info)}
+      className={`${small ? 'favorites__card place-card' : 'cities__card'} place-card`}
+      onMouseEnter={() => typeof onPlaceHover === 'function' ? onPlaceHover(info) : null}
     >
       {info.isPremium ? <div className="place-card__mark"><span>Premium</span></div> : null}
-      <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
-          <img className="place-card__image" src={info.photo} width="260" height="200" alt="Place image" />
-        </a>
+      <div className={`${small ? 'favorites__image-wrapper' : 'cities__image-wrapper'} place-card__image-wrapper`}>
+        <Link to={`/offer/${info.id}`}>
+          <img className="place-card__image" src={info.previewImage} width={small ? '150' : '260'} height={small ? '110' : '200'} alt="Place image" />
+        </Link>
       </div>
-      <div className="place-card__info">
+      <div className={`${small ? 'favorites__card-info' : ''} place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{info.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={`place-card__bookmark-button button ${isFavorite && 'place-card__bookmark-button--active'}`} type="button" onClick={() => setFavorite((state) => !state)}>
+          <button className={`place-card__bookmark-button button ${isToggle ? 'place-card__bookmark-button--active' : ''}`} type="button" onClick={() => typeof handleClickButton === 'function' && handleClickButton()}>
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>
@@ -38,17 +61,17 @@ function Card ({ info, onPlaceHover }: TCard): JSX.Element {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: `${info.rating * 20}%`}}></span>
+            <span style={{width: `${Math.round(info.rating) * 20}%`}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
           <Link to={`/offer/${info.id}`}>{info.title}</Link>
         </h2>
-        <p className="place-card__type">{info.type}</p>
+        <p className="place-card__type" style={{ textTransform: 'capitalize' }}>{info.type}</p>
       </div>
     </div>
   );
 }
 
-export default Card;
+export default memo(Card);
