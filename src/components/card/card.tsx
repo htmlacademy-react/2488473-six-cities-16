@@ -1,21 +1,21 @@
-
-import { useState } from 'react';
-import { Offer } from '../../types/offer';
+import React, { useState } from 'react';
+import { TOffer } from '../../types/global';
 
 import { Link } from 'react-router-dom';
 
 type TCard = {
-  info: Offer;
+  info: TOffer;
+  onPlaceHover: (placeName: TOffer | undefined) => void;
 }
 
-function Card ({ info }: TCard): JSX.Element {
-  const [isHover, setHover] = useState<boolean>(false);
+function Card ({ info, onPlaceHover }: TCard): JSX.Element {
+  const [isFavorite, setFavorite] = useState<boolean>(info.isFavorite);
 
   return (
     <div
       className="cities__card place-card"
-      onMouseLeave={() => setHover((prevState) => !prevState)}
-      onMouseEnter={() => setHover((prevState) => !prevState)}
+      onMouseLeave={() => onPlaceHover(undefined)}
+      onMouseEnter={() => onPlaceHover(info)}
     >
       {info.isPremium ? <div className="place-card__mark"><span>Premium</span></div> : null}
       <div className="cities__image-wrapper place-card__image-wrapper">
@@ -29,7 +29,7 @@ function Card ({ info }: TCard): JSX.Element {
             <b className="place-card__price-value">&euro;{info.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={`place-card__bookmark-button button ${info.isFavorite ? 'place-card__bookmark-button--active' : null}`} type="button">
+          <button className={`place-card__bookmark-button button ${isFavorite && 'place-card__bookmark-button--active'}`} type="button" onClick={() => setFavorite((state) => !state)}>
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>

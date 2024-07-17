@@ -1,13 +1,17 @@
-import ReviewForm from '../components/forms/review-form';
+import ReviewLayout from '../components/layouts/review-layout/review-layout';
 import Logo from '../components/logo/logo';
+import Map from '../components/map/map';
 import { AuthorizationStatus } from '../const';
+import { getAmsterdam, getRandomCard } from '../mocks/generateMock';
+import { TReview } from '../types/global';
 
 
 type TOfferScreen = {
   authorization: AuthorizationStatus;
+  reviews: TReview[];
 }
 
-function OfferScreen ({ authorization }: TOfferScreen): JSX.Element {
+function OfferScreen ({ authorization, reviews }: TOfferScreen): JSX.Element {
   return (
     <div className="page">
       <header className="header">
@@ -63,9 +67,7 @@ function OfferScreen ({ authorization }: TOfferScreen): JSX.Element {
           </div>
           <div className="offer__container container">
             <div className="offer__wrapper">
-              <div className="offer__mark">
-                <span>Premium</span>
-              </div>
+              <div className="offer__mark"><span>Premium</span></div>
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">
                   Beautiful &amp; luxurious studio at great location
@@ -156,37 +158,12 @@ function OfferScreen ({ authorization }: TOfferScreen): JSX.Element {
                   </p>
                 </div>
               </div>
-              <section className="offer__reviews reviews">
-                <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">1</span></h2>
-                <ul className="reviews__list">
-                  <li className="reviews__item">
-                    <div className="reviews__user user">
-                      <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                        <img className="reviews__avatar user__avatar" src="img/avatar-max.jpg" width="54" height="54" alt="Reviews avatar" />
-                      </div>
-                      <span className="reviews__user-name">
-                        Max
-                      </span>
-                    </div>
-                    <div className="reviews__info">
-                      <div className="reviews__rating rating">
-                        <div className="reviews__stars rating__stars">
-                          <span style={{width: '80%'}}></span>
-                          <span className='visually-hidden'>Rating</span>
-                        </div>
-                      </div>
-                      <p className="reviews__text">
-                        A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
-                      </p>
-                      <time className="reviews__time" dateTime="2019-04-24">April 2019</time>
-                    </div>
-                  </li>
-                </ul>
-                { authorization === AuthorizationStatus.Auth ? <ReviewForm /> : null }
-              </section>
+              <ReviewLayout authorization={authorization} reviews={reviews} />
             </div>
           </div>
-          <section className="offer__map map"></section>
+          <section className="offer__map map">
+            <Map city={getAmsterdam()} points={getRandomCard().slice(0, 3)} selected={undefined}/>
+          </section>
         </section>
         <div className="container">
           <section className="near-places places">
