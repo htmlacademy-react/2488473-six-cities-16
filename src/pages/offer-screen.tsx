@@ -37,7 +37,7 @@ function OfferScreen (): JSX.Element {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  
+
   const { id } = useParams();
 
   const isAuth = useAppSelector((state) => state.authorization);

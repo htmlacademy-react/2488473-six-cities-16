@@ -1,7 +1,7 @@
-import { FormEvent, KeyboardEvent, useState } from "react";
-import { useAppDispatch } from "../../hooks";
+import { FormEvent, KeyboardEvent, useState } from 'react';
+import { useAppDispatch } from '../../hooks';
 
-import { fetchGetAuth } from "../../store/apiAction";
+import { fetchGetAuth } from '../../store/apiAction';
 
 
 function AuthForm (): JSX.Element {

@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 
 import { TOffer } from '../../types/global';
 
@@ -74,4 +74,4 @@ function Card ({ info, onPlaceHover, small }: TCard): JSX.Element {
   );
 }
 
-export default memo(Card, );
+export default memo(Card);
