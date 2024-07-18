@@ -1,8 +1,11 @@
-import { Link } from 'react-router-dom';
-import Header from '../components/header/header';
-import FavoriteLayout from '../components/layouts/favorite-layout/favorite-layout';
-import { TOffer, TOfferDetail } from '../types/global';
 import { useAppSelector } from '../hooks';
+
+import { TOffer, TOfferDetail } from '../types/global';
+
+import Header from '../components/header/header';
+import { Link } from 'react-router-dom';
+import FavoriteLayout from '../components/layouts/favorite-layout/favorite-layout';
+import FavoritesEmpty from '../components/favorites-empty/favorites-empty';
 
 
 type TAllOffers = (TOffer | TOfferDetail)[];
@@ -35,17 +38,23 @@ function FavoriteScreen (): JSX.Element {
   const favorites: TAllOffers = useAppSelector((state) => state.favorites);
   const filteredOffers = getFilteredOffers(favorites);
 
+  const isFavoritesNull = favorites.length === 0;
+
   return (
-    <div className="page" style={{ minHeight: '100vh' }}>
+    <div className={`page ${ isFavoritesNull && 'page--favorites-empty' }`} style={{ minHeight: '100vh' }}>
       <Header />
 
-      <main className="page__main page__main--favorites">
+      <main className={`page__main page__main--favorites ${ isFavoritesNull && 'page__main--favorites-empty'}`}>
         <div className="page__favorites-container container">
-          <section className="favorites">
-            <h1 className="favorites__title">Saved listing</h1>
-            <ul className="favorites__list">
-              {Object.keys(filteredOffers).map((key) => <FavoriteLayout key={key} name={key} offers={filteredOffers[key as keyof TResultFilter]} />)}
-            </ul>
+          <section className={`favorites ${isFavoritesNull && 'favorites--empty'}`}>
+            {favorites.length > 0 ?
+              <>
+                <h1 className="favorites__title">Saved listing</h1>
+                <ul className="favorites__list">
+                  {Object.keys(filteredOffers).map((key) => <FavoriteLayout key={key} name={key} offers={filteredOffers[key as keyof TResultFilter]} />)}
+                </ul>
+              </> : <FavoritesEmpty />
+            }
           </section>
         </div>
       </main>
