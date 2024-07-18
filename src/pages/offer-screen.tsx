@@ -32,8 +32,6 @@ function OfferScreen (): JSX.Element {
   const [data, setData] = useState<TOfferDetail | undefined>();
   const [nearby, setNearby] = useState<TOffer[] | undefined>();
 
-  const [selectedPoint, setSelectedPoint] = useState<TOffer | undefined>(undefined);
-
   const offer = data instanceof Object ? data : null;
 
   const navigate = useNavigate();
@@ -147,14 +145,14 @@ function OfferScreen (): JSX.Element {
             </div>
           </div>
           <section className="offer__map map">
-            <Map city={data.city} points={[data, ...nearby]} selected={selectedPoint}/>
+            <Map city={data.city} points={[data, ...nearby.slice(0, 3)]} selected={data} />
           </section>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <div className="near-places__list places__list">
-              {nearby.map((item) => <Card key={item.id} info={item} onPlaceHover={setSelectedPoint} />)}
+              {nearby.slice(0, 3).map((item) => <Card key={item.id} info={item} />)}
             </div>
           </section>
         </div>
