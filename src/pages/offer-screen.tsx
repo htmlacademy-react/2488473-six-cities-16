@@ -10,6 +10,7 @@ import Header from '../components/header/header';
 import ReviewLayout from '../components/layouts/review-layout/review-layout';
 import Map from '../components/map/map';
 import Card from '../components/card/card';
+import { AppRoute } from '../const';
 
 
 function getFormatRate (rate: number) {
@@ -19,7 +20,7 @@ function getFormatRate (rate: number) {
 
 function InsideItem ({ text }: { text: string }) {
   return (
-    <li className="offer__inside-item" style={{ textTransform: 'capitalize' }}>
+    <li className="offer__inside-item" style={{ textTransform: 'capitalize' }} key={text}>
       {text}
     </li>
   );
@@ -60,13 +61,13 @@ function OfferScreen (): JSX.Element {
 
   useEffect(() => {
     fetch(`https://16.design.htmlacademy.pro/six-cities/offers/${id}`)
-      .then((res) => res.status !== 200 ? navigate('/') : res.json())
+      .then((res) => res.status !== 200 ? navigate(AppRoute.Unknown, {replace: true}) : res.json())
       .then((res: TOfferDetail) => setData(res))
-      .catch(() => navigate('/'));
+      .catch(() => navigate(AppRoute.Unknown, {replace: true}));
     fetch(`https://16.design.htmlacademy.pro/six-cities/offers/${id}/nearby`)
-      .then((res) => res.status !== 200 ? navigate('/') : res.json())
+      .then((res) => res.status !== 200 ? navigate(AppRoute.Unknown, {replace: true}) : res.json())
       .then((res: TOffer[]) => setNearby(res))
-      .catch(() => navigate('/'));
+      .catch(() => navigate(AppRoute.Unknown, {replace: true}));
   }, []);
 
   return data instanceof Object && nearby instanceof Object ? (
@@ -76,24 +77,11 @@ function OfferScreen (): JSX.Element {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/room.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-02.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-03.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/studio-01.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio" />
-              </div>
+              { data.images.map((item: string) =>
+                <div className="offer__image-wrapper" key={item}>
+                  <img className="offer__image" src={item} alt="Photo studio" />
+                </div>)
+              }
             </div>
           </div>
           <div className="offer__container container">

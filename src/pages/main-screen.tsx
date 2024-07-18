@@ -17,7 +17,7 @@ function MainScreen (): JSX.Element {
   const cards = useAppSelector((state) => state.offers);
   const [selectedPoint, setSelectedPoint] = useState<TOffer | undefined>(undefined);
 
-  const offers = useMemo(() => cards.filter((item) => item.city.name === currentCity.name), []);
+  const offers = useMemo(() => cards.filter((item) => item.city.name === currentCity.name), [cards, currentCity.name]);
 
   if (isOffersLoading) {
     return (<Loader />);

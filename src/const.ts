@@ -76,3 +76,11 @@ export const ApiRoute = {
   LogoutAuth: '/six-cities/logout',
   GetFavorites: '/six-cities/favorite'
 };
+
+export const AppRoute = {
+  Main: '/',
+  Login: '/login',
+  Favorites: '/favorites',
+  Offer: '/offer/:id',
+  Unknown: '*',
+};
