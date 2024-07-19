@@ -1,7 +1,6 @@
 import { memo, useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../hooks';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toggleFavorites } from '../store/rootAction';
+import useFavorite from '../hooks/use-favorite';
 
 import { TOffer, TOfferDetail } from '../types/global';
 
@@ -32,30 +31,11 @@ function OfferScreen (): JSX.Element {
   const [data, setData] = useState<TOfferDetail | undefined>();
   const [nearby, setNearby] = useState<TOffer[] | undefined>();
 
-  const offer = data instanceof Object ? data : null;
-
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
   const { id } = useParams();
 
-  const isAuth = useAppSelector((state) => state.authorization);
-  const isFavorite = useAppSelector((state) => state.favorites.filter((item) => item.id === offer?.id).length > 0);
-
-  const [isToggle, setToggle] = useState<boolean>(isFavorite);
-
-  useEffect(() => {
-    setToggle(isFavorite);
-  }, [isFavorite]);
-
-  function handleClickButton (): void {
-    if (isAuth instanceof Object) {
-      dispatch(toggleFavorites(offer));
-      setToggle((prev) => !prev);
-      return;
-    }
-    navigate('/login');
-  }
+  const [isToggle, onClick] = useFavorite(data);
 
   useEffect(() => {
     fetch(`https://16.design.htmlacademy.pro/six-cities/offers/${id}`)
@@ -75,11 +55,7 @@ function OfferScreen (): JSX.Element {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              { data.images.map((item: string) =>
-                <div className="offer__image-wrapper" key={item}>
-                  <img className="offer__image" src={item} alt="Photo studio" />
-                </div>)
-              }
+              { data.images.map((item: string) => <div className="offer__image-wrapper" key={item}><img className="offer__image" src={item} alt="Photo studio" /></div>)}
             </div>
           </div>
           <div className="offer__container container">
@@ -89,7 +65,7 @@ function OfferScreen (): JSX.Element {
                 <h1 className="offer__name">
                   {data.title}
                 </h1>
-                <button className={`offer__bookmark-button button ${isToggle && 'offer__bookmark-button--active'}`} type="button" onClick={() => typeof handleClickButton === 'function' && handleClickButton()}>
+                <button className={`offer__bookmark-button button ${isToggle && 'offer__bookmark-button--active'}`} type="button" onClick={() => typeof onClick === 'function' && onClick() }>
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>

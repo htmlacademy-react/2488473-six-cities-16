@@ -53,8 +53,7 @@ function FavoriteScreen (): JSX.Element {
                 <ul className="favorites__list">
                   {Object.keys(filteredOffers).map((key) => <FavoriteLayout key={key} name={key} offers={filteredOffers[key as keyof TResultFilter]} />)}
                 </ul>
-              </> : <FavoritesEmpty />
-            }
+              </> : <FavoritesEmpty />}
           </section>
         </div>
       </main>

@@ -1,7 +1,7 @@
 import leaflet from 'leaflet';
 
 import { useRef, useEffect } from 'react';
-import useMap from '../../hooks/useMap';
+import useMap from '../../hooks/use-map';
 
 import { TCity, TOffer, TOfferDetail } from '../../types/global';
 
