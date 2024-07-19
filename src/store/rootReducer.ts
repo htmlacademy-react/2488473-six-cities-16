@@ -56,7 +56,7 @@ const rootReducer = createReducer(initialState, (builder) => {
     .addCase(setAuthLoading, (state, action) => {
       state.isAuthLoading = action.payload;
     })
-    .addCase(clearFavorites, (state, action) => {
+    .addCase(clearFavorites, (state) => {
       state.favorites = [];
     });
 });
