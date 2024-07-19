@@ -5,6 +5,8 @@ import { useAppDispatch, useAppSelector } from '../hooks/index';
 import { useNavigate } from 'react-router-dom';
 
 import { TOffer, TOfferDetail } from '../types/global';
+import { toast } from 'react-toastify';
+import { getToken } from '../service/token';
 
 
 type TFavoriteProp = TOffer | TOfferDetail | undefined;
@@ -22,33 +24,41 @@ function useFavorite (offer: TFavoriteProp) {
   );
 
   const [isToggle, setToggle] = useState<boolean>(isFavorite);
+  const [isDisabled, setDisabled] = useState<boolean>(false);
 
   useEffect(() => {
     setToggle(isFavorite);
   }, [isFavorite]);
 
+  function setFavorite () {
+    dispatch(toggleFavorites({
+      id: offer?.id,
+      title: offer?.title,
+      type: offer?.type,
+      price: offer?.price,
+      previewImage,
+      city: offer?.city,
+      location: offer?.location,
+      isFavorite: offer?.isFavorite,
+      isPremium: offer?.isPremium,
+      rating: offer?.rating
+    }));
+    setToggle((prev) => !prev);
+  }
 
   function handleButtonClick (): void {
     if (isAuth instanceof Object) {
-      dispatch(toggleFavorites({
-        id: offer?.id,
-        title: offer?.title,
-        type: offer?.type,
-        price: offer?.price,
-        previewImage,
-        city: offer?.city,
-        location: offer?.location,
-        isFavorite: offer?.isFavorite,
-        isPremium: offer?.isPremium,
-        rating: offer?.rating
-      }));
-      setToggle((prev) => !prev);
+      setDisabled(true);
+      fetch(`https://16.design.htmlacademy.pro/six-cities/favorite/${offer?.id}/${+(!isToggle)}`, {method: 'POST', headers: {'X-Token': getToken()}})
+        .then((data) => ![200, 201, 204].includes(data.status) ? toast('Не удалось произвести операцию над букмарком!', {type: 'error'}) : setFavorite())
+        .catch(() => toast('Не удалось произвести операцию над букмарком!', {type: 'error'}));
+      setDisabled(false);
       return;
     }
     navigate('/login');
   }
 
-  return [isToggle, handleButtonClick];
+  return [isToggle, isDisabled, handleButtonClick];
 }
 
 export default useFavorite;

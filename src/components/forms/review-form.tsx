@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 
+
 type TReviewForm = {
   submitForm: (text: string, rate: number) => void;
 }

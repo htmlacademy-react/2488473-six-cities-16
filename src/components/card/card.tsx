@@ -13,7 +13,7 @@ type TCard = {
 
 function Card ({ info, onPlaceHover, small }: TCard): JSX.Element {
 
-  const [isToggle, onClick] = useFavorite(info);
+  const [isToggle, isDisabled, onClick] = useFavorite(info);
 
   return (
     <div
@@ -32,7 +32,7 @@ function Card ({ info, onPlaceHover, small }: TCard): JSX.Element {
             <b className="place-card__price-value">&euro;{info.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={`place-card__bookmark-button button ${isToggle ? 'place-card__bookmark-button--active' : ''}`} type="button" onClick={() => typeof onClick === 'function' && onClick()}>
+          <button className={`place-card__bookmark-button button ${isToggle ? 'place-card__bookmark-button--active' : ''}`} type="button" onClick={() => typeof onClick === 'function' && onClick()} disabled={isDisabled as boolean}>
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>

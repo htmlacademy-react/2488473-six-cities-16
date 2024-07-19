@@ -35,7 +35,7 @@ function OfferScreen (): JSX.Element {
 
   const { id } = useParams();
 
-  const [isToggle, onClick] = useFavorite(data);
+  const [isToggle, isDisabled, onClick] = useFavorite(data);
 
   useEffect(() => {
     fetch(`https://16.design.htmlacademy.pro/six-cities/offers/${id}`)
@@ -65,7 +65,7 @@ function OfferScreen (): JSX.Element {
                 <h1 className="offer__name">
                   {data.title}
                 </h1>
-                <button className={`offer__bookmark-button button ${isToggle && 'offer__bookmark-button--active'}`} type="button" onClick={() => typeof onClick === 'function' && onClick() }>
+                <button className={`offer__bookmark-button button ${isToggle && 'offer__bookmark-button--active'}`} type="button" onClick={() => typeof onClick === 'function' && onClick() } disabled={isDisabled as boolean}>
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
