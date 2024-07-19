@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import { AppRoute } from '../../const';
+
 import MainScreen from '../../pages/main-screen';
 import FavoriteScreen from '../../pages/favorite-screen';
 import OfferScreen from '../../pages/offer-screen';
@@ -15,16 +17,16 @@ function App (): JSX.Element {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        <Route path='/' element={<MainScreen />}/>
-        <Route path='/login' element={<AuthProtect />}/>
-        <Route path='/favorites' element={
+        <Route path={AppRoute.Main} element={<MainScreen />}/>
+        <Route path={AppRoute.Login} element={<AuthProtect />}/>
+        <Route path={AppRoute.Favorites} element={
           <PrivateRoute>
             <FavoriteScreen />
           </PrivateRoute>
         }
         />
-        <Route path='/offer/:id' element={<OfferScreen />}/>
-        <Route path='*' element={
+        <Route path={AppRoute.Offer} element={<OfferScreen />}/>
+        <Route path={AppRoute.Unknown} element={
           <>
             <h1>404</h1>
             <Logo />

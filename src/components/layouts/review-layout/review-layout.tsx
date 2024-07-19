@@ -1,10 +1,13 @@
 import { memo, useEffect, useState } from 'react';
+import { useAppSelector } from '../../../hooks';
+
+import { TReview } from '../../../types/global';
+
+import { toast } from 'react-toastify';
+import { getToken } from '../../../service/token';
 
 import ReviewForm from '../../forms/review-form';
 import Review from '../../review/review';
-
-import { useAppSelector } from '../../../hooks';
-import { TReview } from '../../../types/global';
 
 
 function ReviewLayout ({ id }: { id: string | undefined }): JSX.Element {
@@ -19,22 +22,24 @@ function ReviewLayout ({ id }: { id: string | undefined }): JSX.Element {
 
   function handleSubmitButton (text: string, rate: number) {
     if (accountInfo instanceof Object) {
-      setReviews((state) => {
-        const stateCopy = state?.slice();
-        stateCopy?.unshift({
-          comment: text,
-          date: new Date().toJSON(),
-          id: '14236879',
-          rating: rate,
-          user: {
-            avatarUrl: accountInfo.avatarUrl,
-            isPro: accountInfo.isPro,
-            name: accountInfo.name
-          }
-        });
+      fetch(`https://16.design.htmlacademy.pro/six-cities/comments/${id}`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Token': getToken() }, body: JSON.stringify({rating: rate, comment: text})})
+        .then((data) => data.status === 201 ? setReviews((state) => {
+          const stateCopy = state?.slice();
+          stateCopy?.unshift({
+            comment: text,
+            date: new Date().toJSON(),
+            id: '14236879',
+            rating: rate,
+            user: {
+              avatarUrl: accountInfo.avatarUrl,
+              isPro: accountInfo.isPro,
+              name: accountInfo.name
+            }
+          });
 
-        return stateCopy || null;
-      });
+          return stateCopy || null;
+        }) : toast('Не удалось отправить отзыв!', {type: 'error'}))
+        .catch(() => toast('Не удалось отправить отзыв!', {type: 'error'}));
     }
   }
 

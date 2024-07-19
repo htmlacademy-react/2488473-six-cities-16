@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchLogout } from '../../store/apiAction';
+import { clearFavorites } from '../../store/rootAction';
 
 import { Link, Navigate } from 'react-router-dom';
 import { memo } from 'react';
@@ -13,6 +14,7 @@ function Account (): JSX.Element {
 
   const onLogout = () => {
     dispatch(fetchLogout());
+    dispatch(clearFavorites())
   };
 
   return accountInfo instanceof Object ? (

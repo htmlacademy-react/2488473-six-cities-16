@@ -1,7 +1,6 @@
 import { memo, useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../hooks';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toggleFavorites } from '../store/rootAction';
+import useFavorite from '../hooks/use-favorite';
 
 import { TOffer, TOfferDetail } from '../types/global';
 
@@ -10,6 +9,7 @@ import Header from '../components/header/header';
 import ReviewLayout from '../components/layouts/review-layout/review-layout';
 import Map from '../components/map/map';
 import Card from '../components/card/card';
+import { AppRoute } from '../const';
 
 
 function getFormatRate (rate: number) {
@@ -19,7 +19,7 @@ function getFormatRate (rate: number) {
 
 function InsideItem ({ text }: { text: string }) {
   return (
-    <li className="offer__inside-item" style={{ textTransform: 'capitalize' }}>
+    <li className="offer__inside-item" style={{ textTransform: 'capitalize' }} key={text}>
       {text}
     </li>
   );
@@ -31,42 +31,21 @@ function OfferScreen (): JSX.Element {
   const [data, setData] = useState<TOfferDetail | undefined>();
   const [nearby, setNearby] = useState<TOffer[] | undefined>();
 
-  const [selectedPoint, setSelectedPoint] = useState<TOffer | undefined>(undefined);
-
-  const offer = data instanceof Object ? data : null;
-
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
   const { id } = useParams();
 
-  const isAuth = useAppSelector((state) => state.authorization);
-  const isFavorite = useAppSelector((state) => state.favorites.filter((item) => item.id === offer?.id).length > 0);
-
-  const [isToggle, setToggle] = useState<boolean>(isFavorite);
-
-  useEffect(() => {
-    setToggle(isFavorite);
-  }, [isFavorite]);
-
-  function handleClickButton (): void {
-    if (isAuth instanceof Object) {
-      dispatch(toggleFavorites(offer));
-      setToggle((prev) => !prev);
-      return;
-    }
-    navigate('/login');
-  }
+  const [isToggle, isDisabled, onClick] = useFavorite(data);
 
   useEffect(() => {
     fetch(`https://16.design.htmlacademy.pro/six-cities/offers/${id}`)
-      .then((res) => res.status !== 200 ? navigate('/') : res.json())
+      .then((res) => res.status !== 200 ? navigate(AppRoute.Unknown, {replace: true}) : res.json())
       .then((res: TOfferDetail) => setData(res))
-      .catch(() => navigate('/'));
+      .catch(() => navigate(AppRoute.Unknown, {replace: true}));
     fetch(`https://16.design.htmlacademy.pro/six-cities/offers/${id}/nearby`)
-      .then((res) => res.status !== 200 ? navigate('/') : res.json())
+      .then((res) => res.status !== 200 ? navigate(AppRoute.Unknown, {replace: true}) : res.json())
       .then((res: TOffer[]) => setNearby(res))
-      .catch(() => navigate('/'));
+      .catch(() => navigate(AppRoute.Unknown, {replace: true}));
   }, []);
 
   return data instanceof Object && nearby instanceof Object ? (
@@ -76,24 +55,7 @@ function OfferScreen (): JSX.Element {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/room.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-02.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-03.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/studio-01.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio" />
-              </div>
+              { data.images.map((item: string) => <div className="offer__image-wrapper" key={item}><img className="offer__image" src={item} alt="Photo studio" /></div>)}
             </div>
           </div>
           <div className="offer__container container">
@@ -103,7 +65,7 @@ function OfferScreen (): JSX.Element {
                 <h1 className="offer__name">
                   {data.title}
                 </h1>
-                <button className={`offer__bookmark-button button ${isToggle && 'offer__bookmark-button--active'}`} type="button" onClick={() => typeof handleClickButton === 'function' && handleClickButton()}>
+                <button className={`offer__bookmark-button button ${isToggle && 'offer__bookmark-button--active'}`} type="button" onClick={() => typeof onClick === 'function' && onClick() } disabled={isDisabled as boolean}>
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
@@ -159,14 +121,14 @@ function OfferScreen (): JSX.Element {
             </div>
           </div>
           <section className="offer__map map">
-            <Map city={data.city} points={[data, ...nearby]} selected={selectedPoint}/>
+            <Map city={data.city} points={[data, ...nearby.slice(0, 3)]} selected={data} />
           </section>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <div className="near-places__list places__list">
-              {nearby.map((item) => <Card key={item.id} info={item} onPlaceHover={setSelectedPoint} />)}
+              {nearby.slice(0, 3).map((item) => <Card key={item.id} info={item} />)}
             </div>
           </section>
         </div>

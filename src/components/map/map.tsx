@@ -1,15 +1,21 @@
-import { useRef, useEffect } from 'react';
 import leaflet from 'leaflet';
-import useMap from '../../hooks/useMap';
-import { TCity, TOffer } from '../../types/global';
+
+import { useRef, useEffect } from 'react';
+import useMap from '../../hooks/use-map';
+
+import { TCity, TOffer, TOfferDetail } from '../../types/global';
+
 import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../../const';
 
 import 'leaflet/dist/leaflet.css';
 
+
+type TSelected = TOffer | undefined | TOfferDetail;
+
 type TMap = {
   city: TCity;
   points: TOffer[];
-  selected: TOffer | undefined;
+  selected: TSelected;
 }
 
 

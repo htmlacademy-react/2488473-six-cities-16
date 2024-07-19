@@ -18,3 +18,5 @@ export const setOffersLoading = createAction<PrepareAction<boolean>>('data/setOf
 export const toggleFavorites = createAction<PrepareAction<TOffer>>('data/toggleFavorites', (value: TOffer) => ({payload: value}));
 
 export const setAuthLoading = createAction<PrepareAction<boolean>>('auth/setAuthLoading', (value: boolean) => ({payload: value}));
+
+export const clearFavorites = createAction('data/clearFavorites');

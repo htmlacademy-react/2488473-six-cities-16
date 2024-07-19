@@ -2,10 +2,8 @@ import { memo } from 'react';
 
 import { TOffer } from '../../types/global';
 
-import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { toggleFavorites } from '../../store/rootAction';
-import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import useFavorite from '../../hooks/use-favorite';
 
 type TCard = {
   info: TOffer;
@@ -15,25 +13,7 @@ type TCard = {
 
 function Card ({ info, onPlaceHover, small }: TCard): JSX.Element {
 
-  const isAuth = useAppSelector((state) => state.authorization);
-  const isFavorite = useAppSelector((state) => state.favorites.filter((item) => item.id === info.id).length > 0);
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-
-  const [isToggle, setToggle] = useState<boolean>(isFavorite);
-
-  useEffect(() => {
-    setToggle(isFavorite);
-  }, [isFavorite]);
-
-  function handleClickButton (): void {
-    if (isAuth instanceof Object) {
-      dispatch(toggleFavorites(info));
-      setToggle((prev) => !prev);
-      return;
-    }
-    navigate('/login');
-  }
+  const [isToggle, isDisabled, onClick] = useFavorite(info);
 
   return (
     <div
@@ -42,7 +22,7 @@ function Card ({ info, onPlaceHover, small }: TCard): JSX.Element {
     >
       {info.isPremium ? <div className="place-card__mark"><span>Premium</span></div> : null}
       <div className={`${small ? 'favorites__image-wrapper' : 'cities__image-wrapper'} place-card__image-wrapper`}>
-        <Link to={`/offer/${info.id}`}>
+        <Link to={`/offer/${info.id}`} state={{previewImage: info.previewImage}}>
           <img className="place-card__image" src={info.previewImage} width={small ? '150' : '260'} height={small ? '110' : '200'} alt="Place image" />
         </Link>
       </div>
@@ -52,7 +32,7 @@ function Card ({ info, onPlaceHover, small }: TCard): JSX.Element {
             <b className="place-card__price-value">&euro;{info.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={`place-card__bookmark-button button ${isToggle ? 'place-card__bookmark-button--active' : ''}`} type="button" onClick={() => typeof handleClickButton === 'function' && handleClickButton()}>
+          <button className={`place-card__bookmark-button button ${isToggle ? 'place-card__bookmark-button--active' : ''}`} type="button" onClick={() => typeof onClick === 'function' && onClick()} disabled={isDisabled as boolean}>
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>
@@ -66,7 +46,7 @@ function Card ({ info, onPlaceHover, small }: TCard): JSX.Element {
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`/offer/${info.id}`}>{info.title}</Link>
+          <Link to={`/offer/${info.id}`} state={{previewImage: info.previewImage}}>{info.title}</Link>
         </h2>
         <p className="place-card__type" style={{ textTransform: 'capitalize' }}>{info.type}</p>
       </div>

@@ -3,7 +3,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { TCity, TOffer, TReview, AuthenticatedProperties, TSortType } from '../types/global';
 import { AuthorizationStatus, CitiesLocations } from '../const';
 
-import { setAuth, setCurrentCity, toggleFavorites, setOffers, setOffersLoading, setSort, setAuthLoading } from './rootAction';
+import { setAuth, setCurrentCity, toggleFavorites, setOffers, setOffersLoading, setSort, setAuthLoading, clearFavorites } from './rootAction';
 
 
 type TInitialState = {
@@ -55,6 +55,9 @@ const rootReducer = createReducer(initialState, (builder) => {
     })
     .addCase(setAuthLoading, (state, action) => {
       state.isAuthLoading = action.payload;
+    })
+    .addCase(clearFavorites, (state) => {
+      state.favorites = [];
     });
 });
 
