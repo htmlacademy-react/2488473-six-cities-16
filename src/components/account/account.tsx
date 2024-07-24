@@ -1,14 +1,18 @@
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchLogout } from '../../store/apiAction';
-import { clearFavorites } from '../../store/rootAction';
 
 import { Link, Navigate } from 'react-router-dom';
 import { memo } from 'react';
 
+import { clearFavorites } from '../../store/slices/data/data.slice';
+
+import { getAuthorization } from '../../store/slices/auth/auth.selector';
+import { getFavorites } from '../../store/slices/data/data.selector';
+
 
 function Account (): JSX.Element {
-  const accountInfo = useAppSelector((state) => state.authorization);
-  const favoritesLength = useAppSelector((state) => state.favorites.length);
+  const accountInfo = useAppSelector(getAuthorization);
+  const favoritesLength = useAppSelector(getFavorites).length;
 
   const dispatch = useAppDispatch();
 

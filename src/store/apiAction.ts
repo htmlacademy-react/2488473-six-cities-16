@@ -2,7 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, AuthenticatedProperties, State, TOffer } from '../types/global';
 import { AxiosInstance } from 'axios';
 import { ApiRoute, AuthorizationStatus } from '../const';
-import { setAuth, setAuthLoading, setOffers, setOffersLoading, toggleFavorites } from './rootAction';
+import { setAuth, setAuthLoading } from './slices/auth/auth.slice';
+import { setOffers, setOffersLoading, toggleFavorites } from './slices/data/data.slice';
 import { dropToken, setToken } from '../service/token';
 import { Bounce, toast } from 'react-toastify';
 

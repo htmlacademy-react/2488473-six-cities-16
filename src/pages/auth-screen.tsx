@@ -1,5 +1,5 @@
 import { CitiesLocations } from '../const';
-import { setCurrentCity } from '../store/rootAction';
+import { setCurrentCity } from '../store/slices/main/main.slice';
 import { getRandomInteger } from '../utils/index';
 import { useAppDispatch } from '../hooks';
 

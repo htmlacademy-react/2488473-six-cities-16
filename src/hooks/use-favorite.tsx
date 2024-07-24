@@ -1,4 +1,4 @@
-import { toggleFavorites } from '../store/rootAction';
+import { toggleFavorites } from '../store/slices/data/data.slice';
 
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/index';
@@ -8,6 +8,10 @@ import { TOffer, TOfferDetail } from '../types/global';
 import { toast } from 'react-toastify';
 import { getToken } from '../service/token';
 
+import { getOffers } from '../store/slices/data/data.selector';
+import { getFavorites } from '../store/slices/data/data.selector';
+import { getAuthorization } from '../store/slices/auth/auth.selector';
+
 
 type TFavoriteProp = TOffer | TOfferDetail | undefined;
 
@@ -15,13 +19,10 @@ function useFavorite (offer: TFavoriteProp) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const previewImage = useAppSelector((state) => state.offers.find((item) => item.id === offer?.id)?.previewImage);
+  const previewImage = useAppSelector(getOffers).find((item) => item.id === offer?.id)?.previewImage;
 
-  const isAuth = useAppSelector((state) => state.authorization);
-  const isFavorite = useAppSelector((state) => state
-    .favorites
-    .filter((item) => item.id === offer?.id).length > 0
-  );
+  const isAuth = useAppSelector(getAuthorization);
+  const isFavorite = useAppSelector(getFavorites).filter((item) => item.id === offer?.id).length > 0;
 
   const [isToggle, setToggle] = useState<boolean>(isFavorite);
   const [isDisabled, setDisabled] = useState<boolean>(false);
@@ -31,18 +32,18 @@ function useFavorite (offer: TFavoriteProp) {
   }, [isFavorite]);
 
   function setFavorite () {
-    dispatch(toggleFavorites({
+    offer instanceof Object ? dispatch(toggleFavorites({
       id: offer?.id,
       title: offer?.title,
       type: offer?.type,
       price: offer?.price,
-      previewImage,
+      previewImage: previewImage!,
       city: offer?.city,
       location: offer?.location,
       isFavorite: offer?.isFavorite,
       isPremium: offer?.isPremium,
       rating: offer?.rating
-    }));
+    })) : null;
     setToggle((prev) => !prev);
   }
 

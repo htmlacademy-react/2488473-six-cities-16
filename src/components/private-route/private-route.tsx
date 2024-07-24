@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { useAppSelector } from '../../hooks';
+import { getAuthorization } from '../../store/slices/auth/auth.selector';
 
 
 type TPrivateRoute = {
@@ -9,7 +10,7 @@ type TPrivateRoute = {
 }
 
 function PrivateRoute ({ children }: TPrivateRoute): ReactNode | JSX.Element {
-  const spaces = useAppSelector((state) => state.authorization instanceof Object ? children : <Navigate to='/login' />);
+  const spaces = useAppSelector(getAuthorization) instanceof Object ? children : <Navigate to='/login' />;
   return spaces;
 }
 
