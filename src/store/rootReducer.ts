@@ -9,6 +9,6 @@ const rootReducer = combineReducers({
   [NameSpace.Main]: mainSlice.reducer,
   [NameSpace.Data]: dataSlice.reducer,
   [NameSpace.Auth]: authSlice.reducer,
-})
+});
 
 export default rootReducer;

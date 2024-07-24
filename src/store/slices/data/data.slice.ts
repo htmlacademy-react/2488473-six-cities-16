@@ -1,14 +1,14 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { NameSpace } from "../../../const";
-import { TDataSlice } from "../../../types/state";
-import { TOffer } from "../../../types/global";
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { NameSpace } from '../../../const';
+import { TDataSlice } from '../../../types/state';
+import { TOffer } from '../../../types/global';
 
 
 const initialState: TDataSlice = {
   offers: [],
   favorites: [],
   isOffersLoading: false,
-}
+};
 
 export const dataSlice = createSlice({
   name: NameSpace.Data,

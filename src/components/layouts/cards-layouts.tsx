@@ -30,7 +30,7 @@ function getSortedOffers (sortType: TSortType, cards: TOffer[]) {
 function CardsLayout ({ cards, onPlaceHover }: TCardsLayout): JSX.Element {
   const sortType = useAppSelector(getCurrentSort);
 
-  const offers = getSortedOffers(sortType, cards); 
+  const offers = getSortedOffers(sortType, cards);
 
   return (
     <div className='cities__places-list places__list tabs__content'>

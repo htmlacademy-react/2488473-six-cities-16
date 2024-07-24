@@ -12,8 +12,6 @@ type TCard = {
 }
 
 function Card ({ info, onPlaceHover, small }: TCard): JSX.Element {
-  console.log(info);
-  
   const [isToggle, isDisabled, onClick] = useFavorite(info);
 
   return (

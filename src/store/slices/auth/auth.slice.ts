@@ -7,7 +7,7 @@ import { TAuthSlice } from '../../../types/state';
 const initialState: TAuthSlice = {
   authorization: AuthorizationStatus.Unknown,
   isAuthLoading: false
-}
+};
 
 export const authSlice = createSlice({
   name: NameSpace.Auth,

@@ -32,7 +32,7 @@ function useFavorite (offer: TFavoriteProp) {
   }, [isFavorite]);
 
   function setFavorite () {
-    offer instanceof Object ? dispatch(toggleFavorites({
+    if (offer instanceof Object) {dispatch(toggleFavorites({
       id: offer?.id,
       title: offer?.title,
       type: offer?.type,
@@ -43,7 +43,7 @@ function useFavorite (offer: TFavoriteProp) {
       isFavorite: offer?.isFavorite,
       isPremium: offer?.isPremium,
       rating: offer?.rating
-    })) : null;
+    }))}
     setToggle((prev) => !prev);
   }
 

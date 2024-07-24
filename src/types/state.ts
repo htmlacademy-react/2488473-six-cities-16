@@ -1,5 +1,5 @@
-import { AuthorizationStatus } from "../const";
-import { AuthenticatedProperties, TCity, TOffer, TSortType } from "./global";
+import { AuthorizationStatus } from '../const';
+import { AuthenticatedProperties, TCity, TOffer, TSortType } from './global';
 
 
 export type TDataSlice = {
@@ -8,7 +8,7 @@ export type TDataSlice = {
   isOffersLoading: boolean;
 }
 
-export type TAuthSlice = { 
+export type TAuthSlice = {
   authorization: AuthorizationStatus | AuthenticatedProperties;
   isAuthLoading: boolean;
 };

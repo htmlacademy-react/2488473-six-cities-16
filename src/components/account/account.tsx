@@ -18,7 +18,7 @@ function Account (): JSX.Element {
 
   const onLogout = () => {
     dispatch(fetchLogout());
-    dispatch(clearFavorites())
+    dispatch(clearFavorites());
   };
 
   return accountInfo instanceof Object ? (

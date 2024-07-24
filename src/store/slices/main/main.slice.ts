@@ -9,7 +9,7 @@ import { TCity, TSortType } from '../../../types/global';
 const initialState: TMainSlice = {
   currentCity: CitiesLocations[0],
   currentSort: 'popular'
-}
+};
 
 
 export const mainSlice = createSlice({
