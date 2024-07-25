@@ -32,18 +32,20 @@ function useFavorite (offer: TFavoriteProp) {
   }, [isFavorite]);
 
   function setFavorite () {
-    if (offer instanceof Object) {dispatch(toggleFavorites({
-      id: offer?.id,
-      title: offer?.title,
-      type: offer?.type,
-      price: offer?.price,
-      previewImage: previewImage!,
-      city: offer?.city,
-      location: offer?.location,
-      isFavorite: offer?.isFavorite,
-      isPremium: offer?.isPremium,
-      rating: offer?.rating
-    }))}
+    if (offer instanceof Object) {
+      dispatch(toggleFavorites({
+        id: offer?.id,
+        title: offer?.title,
+        type: offer?.type,
+        price: offer?.price,
+        previewImage: previewImage!,
+        city: offer?.city,
+        location: offer?.location,
+        isFavorite: offer?.isFavorite,
+        isPremium: offer?.isPremium,
+        rating: offer?.rating
+      }));
+    }
     setToggle((prev) => !prev);
   }
 

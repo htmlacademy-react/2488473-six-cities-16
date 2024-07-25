@@ -10,12 +10,12 @@ import Header from '../components/header/header';
 import Filter from '../components/filter/filter';
 import Sort from '../components/sort/sort';
 import Map from '../components/map/map';
-import { getOffers } from '../store/slices/data/data.selector';
+import { getIsOffersLoading, getOffers } from '../store/slices/data/data.selector';
 import { getCurrentCity } from '../store/slices/main/main.selector';
 
 
 function MainScreen (): JSX.Element {
-  const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
+  const isOffersLoading = useAppSelector(getIsOffersLoading);
   const currentCity = useAppSelector(getCurrentCity);
   const cards = useAppSelector(getOffers);
   const [selectedPoint, setSelectedPoint] = useState<TOffer | undefined>(undefined);
