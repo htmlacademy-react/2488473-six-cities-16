@@ -89,4 +89,4 @@ export const NameSpace = {
   Main: 'main',
   Data: 'data',
   Auth: 'auth',
-};
+} as const;
