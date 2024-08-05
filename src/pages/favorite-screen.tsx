@@ -6,6 +6,7 @@ import Header from '../components/header/header';
 import { Link } from 'react-router-dom';
 import FavoriteLayout from '../components/layouts/favorite-layout/favorite-layout';
 import FavoritesEmpty from '../components/favorites-empty/favorites-empty';
+import { getFavorites } from '../store/slices/data/data.selector';
 
 
 type TAllOffers = (TOffer | TOfferDetail)[];
@@ -35,7 +36,7 @@ function getFilteredOffers (allOffers: TAllOffers): TResultFilter {
 
 function FavoriteScreen (): JSX.Element {
 
-  const favorites: TAllOffers = useAppSelector((state) => state.favorites);
+  const favorites: TAllOffers = useAppSelector(getFavorites);
   const filteredOffers = getFilteredOffers(favorites);
 
   const isFavoritesNull = favorites.length === 0;

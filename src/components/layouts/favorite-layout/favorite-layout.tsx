@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../../hooks';
 import { TOffer, TOfferDetail } from '../../../types/global';
 import Card from '../../card/card';
-import { setCurrentCity } from '../../../store/rootAction';
+import { setCurrentCity } from '../../../store/slices/main/main.slice';
 import { CitiesLocations } from '../../../const';
 import { memo } from 'react';
 

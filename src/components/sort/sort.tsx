@@ -1,7 +1,7 @@
 import { memo, useState } from 'react';
 import { useAppDispatch } from '../../hooks';
 
-import { setSort } from '../../store/rootAction';
+import { setCurrentSort } from '../../store/slices/main/main.slice';
 import { TSortType } from '../../types/global';
 
 
@@ -12,7 +12,7 @@ function Sort (): JSX.Element {
   const dispatch = useAppDispatch();
 
   const handleLiClick = (type: TSortType) => {
-    dispatch(setSort(type.toLowerCase()));
+    dispatch(setCurrentSort(type));
 
     setOpen(false);
     setCurrentType(type);

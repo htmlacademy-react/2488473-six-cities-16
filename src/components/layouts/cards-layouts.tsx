@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { sortByPrice, sortByRating } from '../../utils';
 
 import Card from '../card/card';
+import { getCurrentSort } from '../../store/slices/main/main.selector';
 
 
 type TCardsLayout = {
@@ -27,7 +28,7 @@ function getSortedOffers (sortType: TSortType, cards: TOffer[]) {
 }
 
 function CardsLayout ({ cards, onPlaceHover }: TCardsLayout): JSX.Element {
-  const sortType = useAppSelector((state) => state.currentSort);
+  const sortType = useAppSelector(getCurrentSort);
 
   const offers = getSortedOffers(sortType, cards);
 

@@ -6,7 +6,7 @@ import store from './store/store';
 import { fetchAuth, fetchOffers } from './store/apiAction';
 
 import App from './components/app/app';
-import { ToastContainer } from 'react-toastify';
+import { Bounce, ToastContainer } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,7 +19,7 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <ToastContainer />
+    <ToastContainer position='top-right' autoClose={5000} hideProgressBar={false} closeOnClick pauseOnHover draggable={false} theme={'dark'} transition={Bounce} />
     <Provider store={store}>
       <App />
     </Provider>
