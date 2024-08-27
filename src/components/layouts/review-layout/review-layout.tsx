@@ -8,11 +8,12 @@ import { getToken } from '../../../service/token';
 
 import ReviewForm from '../../forms/review-form';
 import Review from '../../review/review';
+import { getAuthorization } from '../../../store/slices/auth/auth.selector';
 
 
 function ReviewLayout ({ id }: { id: string | undefined }): JSX.Element {
   const [reviews, setReviews] = useState<TReview[] | null>(null);
-  const accountInfo = useAppSelector((state) => state.authorization);
+  const accountInfo = useAppSelector(getAuthorization);
 
   useEffect(() => {
     fetch(`https://16.design.htmlacademy.pro/six-cities/comments/${id}`)

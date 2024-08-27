@@ -84,3 +84,9 @@ export const AppRoute = {
   Offer: '/offer/:id',
   Unknown: '*',
 };
+
+export const NameSpace = {
+  Main: 'main',
+  Data: 'data',
+  Auth: 'auth',
+} as const;

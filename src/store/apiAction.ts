@@ -1,101 +1,63 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, AuthenticatedProperties, State, TOffer } from '../types/global';
 import { AxiosInstance } from 'axios';
-import { ApiRoute, AuthorizationStatus } from '../const';
-import { setAuth, setAuthLoading, setOffers, setOffersLoading, toggleFavorites } from './rootAction';
-import { dropToken, setToken } from '../service/token';
-import { Bounce, toast } from 'react-toastify';
+import { ApiRoute } from '../const';
+import { clearFavorites, toggleFavorites } from './slices/data/data.slice';
+import { setToken } from '../service/token';
 
+const GREAT_CODES = [201, 204, 200, 304];
 
-type AsyncThunkPropWithAxios = {
+type TAsyncThunkPropWithExtra = {
   state: State;
   dispatch: AppDispatch;
   extra: AxiosInstance;
 };
 
-export const fetchOffers = createAsyncThunk<void, undefined, AsyncThunkPropWithAxios>(
+export const fetchOffers = createAsyncThunk<TOffer[], undefined, TAsyncThunkPropWithExtra>(
   'data/offers',
-  async (_args, {dispatch, extra: api}) => {
-    dispatch(setOffersLoading(true));
+  async (_args, {extra: api}) => {
     const { data } = await api.get<TOffer[]>(ApiRoute.AllOffers);
-    dispatch(setOffersLoading(false));
-    dispatch(setOffers(data));
+    return data;
   }
 );
 
-export const fetchAuth = createAsyncThunk<void, undefined, AsyncThunkPropWithAxios>(
+// for localStorage token
+export const fetchAuth = createAsyncThunk<AuthenticatedProperties, undefined, TAsyncThunkPropWithExtra>(
   'auth/checkAuth',
   async (_args, {dispatch, extra: api}) => {
-    try {
-      dispatch(setAuthLoading(true));
-      const { data } = await api.get<AuthenticatedProperties>(ApiRoute.CheckAuth);
+    const { data, status } = await api.get<AuthenticatedProperties>(ApiRoute.CheckAuth);
 
-      dispatch(setAuth(data));
-      setToken(data.token);
-
-      const data1 = await api.get<TOffer[]>(ApiRoute.GetFavorites);
+    if (GREAT_CODES.includes(status)) {
+      const data1 = await api.get<TOffer[]>(ApiRoute.GetFavorites, { headers: {'X-Token': data.token} });
       data1.data.forEach((item: TOffer) => dispatch(toggleFavorites(item)));
-
-    } catch {
-      dispatch(setAuth(AuthorizationStatus.NoAuth));
-    } finally {
-      dispatch(setAuthLoading(false));
     }
+
+    return data;
   }
 );
 
-export const fetchGetAuth = createAsyncThunk<void, {email: string; password: string}, AsyncThunkPropWithAxios>(
+export const fetchGetAuth = createAsyncThunk<AuthenticatedProperties, {email: string; password: string}, TAsyncThunkPropWithExtra>(
   'auth/getAuth',
   async ({ email, password }, { dispatch, extra: api }) => {
-    try {
-      dispatch(setAuthLoading(true));
-      const { data } = await api.post<AuthenticatedProperties>(ApiRoute.GetAuth, ({email: email, password: password}));
-      dispatch(setAuth(data));
-      setToken(data.token);
+    const { data, status } = await api.post<AuthenticatedProperties>(ApiRoute.GetAuth, ({email: email, password: password}));
+    setToken(data.token);
+
+    if (GREAT_CODES.includes(status)) {
       const data1 = await api.get<TOffer[]>(ApiRoute.GetFavorites);
       data1.data.forEach((item: TOffer) => dispatch(toggleFavorites(item)));
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      toast.error(err.response.data.details[0].messages[0] as string, {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: false,
-        progress: undefined,
-        theme: 'dark',
-        transition: Bounce,
-      });
-    } finally {
-      dispatch(setAuthLoading(false));
     }
+
+    return data;
   }
 );
 
-export const fetchLogout = createAsyncThunk<void, undefined, AsyncThunkPropWithAxios>(
+export const fetchLogout = createAsyncThunk<void, undefined, TAsyncThunkPropWithExtra>(
   'auth/logout',
-  async (_args, {dispatch, extra: api}) => {
-    try {
-      setAuthLoading(true);
-      await api.delete(ApiRoute.LogoutAuth);
-      dispatch(setAuth(AuthorizationStatus.NoAuth));
-    } catch (e){
-      toast.error('Error when try to logout', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: false,
-        progress: undefined,
-        theme: 'dark',
-        transition: Bounce,
-      });
-    } finally {
-      setAuthLoading(false);
-      dropToken();
+  async (_args, { dispatch, extra: api}) => {
+    const { status } = await api.get(ApiRoute.LogoutAuth, { method: 'delete' });
+
+    if (GREAT_CODES.includes(status)) {
+      dispatch(clearFavorites());
     }
   }
 );

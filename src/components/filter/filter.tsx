@@ -1,15 +1,17 @@
 import { CitiesLocations } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { TCityName } from '../../types/global';
-import { setCurrentCity } from '../../store/rootAction';
+import { setCurrentCity } from '../../store/slices/main/main.slice';
+import { getCurrentCity } from '../../store/slices/main/main.selector';
 import { memo } from 'react';
+
 
 type TFilterElement = {
   city: TCityName;
 }
 
 function FilterElement ({ city }: TFilterElement): JSX.Element {
-  const selectedCity = useAppSelector((state) => state.currentCity.name);
+  const selectedCity = useAppSelector(getCurrentCity).name;
 
   const dispatch = useAppDispatch();
 
